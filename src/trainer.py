@@ -1,4 +1,5 @@
 import gc
+from pathlib import Path
 import time
 import copy
 from collections import defaultdict
@@ -73,7 +74,7 @@ def get_trainer(
             best_epoch_loss = val_epoch_loss
             # run.summary["Best Loss"] = best_epoch_loss
             best_model_wts = copy.deepcopy(model.state_dict())
-            PATH = f"Loss-Fold-{fold}.bin"
+            PATH = Path(config['wights_save']) / f"Loss-Fold-{fold}.bin"
             torch.save(model.state_dict(), PATH)
             # Save a model file from the current directory
             print(f"Model Saved{sr_}")

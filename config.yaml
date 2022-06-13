@@ -1,14 +1,19 @@
 # paths
-input: &IBASE D:\Kevin\Machine Learning\FeedbackPEA\input\
+# input: &IBASE D:\Kevin\Machine Learning\FeedbackPEA\input\ # local
+input: &IBASE ../input/feedback-prize-effectiveness # kaggle
 train_csv: !join [*IBASE, train.csv]
 test_csv: !join [*IBASE, test.csv]
 sample_csv: !join [*IBASE, sample_submission.csv]
 train_base: !join [*IBASE, train/]
 test_base: !join [*IBASE, test/]
 
-generated: &GBASE D:\Kevin\Machine Learning\FeedbackPEA\generated\
+# generated: &GBASE D:\Kevin\Machine Learning\FeedbackPEA\generated\ # local
+generated: &GBASE ./FeedbackEPA-Kaggle/generated # kaggle
 train_folds: !join [*GBASE, train_folds.csv]
 label_enc: !join [*GBASE, label_enc.pkl]
+
+# weights_save: &WBASE D:\Kevin\Machine Learning\FeedbackPEA\weights\ # local
+weights_save: &WBASE ./FeedbackEPA-Kaggle/weights/ # kaggle
 
 # model names and paths
 model_name: &MODEL microsoft/deberta-v3-base
