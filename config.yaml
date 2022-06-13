@@ -1,0 +1,42 @@
+# paths
+input: &IBASE D:\Kevin\Machine Learning\FeedbackPEA\input\
+train_csv: !join [*IBASE, train.csv]
+test_csv: !join [*IBASE, test.csv]
+sample_csv: !join [*IBASE, sample_submission.csv]
+train_base: !join [*IBASE, train/]
+test_base: !join [*IBASE, test/]
+
+generated: &GBASE D:\Kevin\Machine Learning\FeedbackPEA\generated\
+train_folds: !join [*GBASE, train_folds.csv]
+label_enc: !join [*GBASE, label_enc.pkl]
+
+# model names and paths
+model_name: &MODEL microsoft/deberta-v3-base
+tokenizer_path: *MODEL
+
+# kfold cv
+folds: 5
+fold_type: "group" # ["stratified", "group"]
+
+# model params
+num_classes: 3
+
+# train params
+epochs: 3
+n_accumulate: 1
+max_length: 512
+train_bs: 1
+valid_bs: 1
+
+# scheduler
+scheduler: CosineAnnealingLR # [CosineAnnealingLR, CosineAnnealingWarmRestarts, None]
+T_max: 500
+min_lr: 0.000001
+
+# optimizer
+lr: 0.00001
+wd: 0.000001
+
+# hardware
+cpu: true # [true, false]
+amp: no # ["no", "fp16", "bf16"]
