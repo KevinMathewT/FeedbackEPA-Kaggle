@@ -61,6 +61,7 @@ def valid_one_epoch(model, dataloader, criterion, accelerator, epoch):
 
     dataset_size = 0
     running_loss = 0.0
+    st = time()
 
     # bar = tqdm(enumerate(dataloader), total=len(dataloader))
     for step, data in enumerate(dataloader): # bar:
