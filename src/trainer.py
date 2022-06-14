@@ -75,7 +75,7 @@ def get_trainer(
             # torch.save(model.state_dict(), PATH)
             accelerator.save_state(PATH)
             # Save a model file from the current directory
-            print(f"Model Saved{sr_}")
+            print(f"Model Saved to: {PATH}{sr_}")
 
         print()
 
