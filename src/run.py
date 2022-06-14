@@ -25,6 +25,7 @@ for fold in range(0, config["folds"]):
     #                  anonymous='must')
 
     accelerator = Accelerator(cpu=config["cpu"], mixed_precision=config["amp"])
+    print(f"running on device: {accelerator.device}")
 
     # Create dataloaders, model, optimizer, scheduler, criterion etc
     model = get_model()
