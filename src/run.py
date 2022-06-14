@@ -23,7 +23,7 @@ def run(index):
     for fold in config['tr_folds']:
         seed_everything(config['seed'])
 
-        print(f"{y_}====== Fold: {fold} ======{sr_}")
+        accelerator.print(f"{y_}====== Fold: {fold} ======{sr_}")
         # run = wandb.init(project='FeedBack',
         #                  config=CONFIG,
         #                  job_type='Train',
@@ -33,7 +33,7 @@ def run(index):
         #                  anonymous='must')
 
         accelerator = Accelerator()
-        print(f"running on device: {accelerator.device}")
+        accelerator.print(f"running on device: {accelerator.device}")
         if torch.cuda.is_available():
             print("[INFO] Using GPU: {}\n".format(torch.cuda.get_device_name()))
 
