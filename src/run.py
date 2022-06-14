@@ -21,8 +21,7 @@ def run(index):
     print(f"*** Training on folds: {config['tr_folds']} ***")
 
     for fold in config['tr_folds']:
-        seed_everything(config['seed'])
-
+        accelerator.print(index)
         accelerator.print(f"{y_}====== Fold: {fold} ======{sr_}")
         # run = wandb.init(project='FeedBack',
         #                  config=CONFIG,
@@ -67,6 +66,8 @@ def run(index):
         print()
 
 if __name__ == "__main__":
+    seed_everything(config['seed'])
+    
     if config['tpu']:
         import torch_xla.distributed.xla_multiprocessing as xmp
         xmp.spawn(run, args=())

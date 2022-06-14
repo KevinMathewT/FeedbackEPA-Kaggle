@@ -31,8 +31,8 @@ num_classes: 3
 epochs: 3
 n_accumulate: 1
 max_length: 512
-train_bs: 8
-valid_bs: 16
+train_bs: 1
+valid_bs: 1
 
 ### scheduler
 scheduler: CosineAnnealingLR # [CosineAnnealingLR, CosineAnnealingWarmRestarts, None]
