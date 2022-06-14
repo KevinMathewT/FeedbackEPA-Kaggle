@@ -30,7 +30,7 @@ for fold in config['tr_folds']:
     #                  name=f'{HASH_NAME}-fold-{fold}',
     #                  anonymous='must')
 
-    accelerator = Accelerator(cpu=config["cpu"], mixed_precision=config["amp"])
+    accelerator = Accelerator()
     print(f"running on device: {accelerator.device}")
     if torch.cuda.is_available():
         print("[INFO] Using GPU: {}\n".format(torch.cuda.get_device_name()))
