@@ -47,7 +47,6 @@ def train_one_epoch(
         if step == 0 or (step + 1) % config['freq'] == 0 or step == len(dataloader) - 1:
             accelerator.print(f"[{epoch}/{config['epochs']}][{str(step + 1):5s}/{len(dataloader)}] train loss: {epoch_loss:1.10f} | lr: {optimizer.param_groups[0]['lr']:1.10f} | time: {time() - st:1.1f}s")
         
-        break
         # optimizer.param_groups[0]["lr"]
         # bar.set_postfix(
         #     Epoch=epoch, Train_Loss=epoch_loss, LR=optimizer.param_groups[0]["lr"]
@@ -85,8 +84,6 @@ def valid_one_epoch(model, dataloader, criterion, accelerator, epoch):
         if step == 0 or (step + 1) % config['freq'] == 0 or step == len(dataloader) - 1:
             accelerator.print(f"[{epoch}/{config['epochs']}][{str(step + 1):5s}/{len(dataloader)}] valid loss: {epoch_loss:1.10f} | time: {time() - st:1.1f}s")
         # bar.set_postfix(Epoch=epoch, Valid_Loss=epoch_loss)
-
-        break
 
     gc.collect()
 
