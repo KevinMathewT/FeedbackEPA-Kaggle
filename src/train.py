@@ -42,9 +42,12 @@ def train_one_epoch(
 
         epoch_loss = running_loss / dataset_size
 
-        bar.set_postfix(
-            Epoch=epoch, Train_Loss=epoch_loss, LR=optimizer.param_groups[0]["lr"]
-        )
+        if step % 10 == 0:
+            print(f"[{epoch}/{config['epochs']}][{step}/{len(dataloader)}] train loss: {epoch_loss} | lr: {optimizer.param_groups[0]['lr']}")
+        # optimizer.param_groups[0]["lr"]
+        # bar.set_postfix(
+        #     Epoch=epoch, Train_Loss=epoch_loss, LR=optimizer.param_groups[0]["lr"]
+        # )
     gc.collect()
 
     return epoch_loss
@@ -74,7 +77,9 @@ def valid_one_epoch(model, dataloader, criterion, accelerator, epoch):
 
         epoch_loss = running_loss / dataset_size
 
-        bar.set_postfix(Epoch=epoch, Valid_Loss=epoch_loss)
+        if step % 10 == 0:
+            print(f"[{epoch}/{config['epochs']}][{step}/{len(dataloader)}] valid loss: {epoch_loss}")
+        # bar.set_postfix(Epoch=epoch, Valid_Loss=epoch_loss)
 
     gc.collect()
 
