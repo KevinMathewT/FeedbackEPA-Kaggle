@@ -72,7 +72,8 @@ def get_trainer(
             # run.summary["Best Loss"] = best_epoch_loss
             best_model_wts = copy.deepcopy(model.state_dict())
             PATH = Path(config['wights_save']) / f"Loss-Fold-{fold}.bin"
-            torch.save(model.state_dict(), PATH)
+            # torch.save(model.state_dict(), PATH)
+            accelerator.save_state(PATH)
             # Save a model file from the current directory
             print(f"Model Saved{sr_}")
 
