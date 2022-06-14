@@ -14,8 +14,8 @@ def train_one_epoch(
     dataset_size = 0
     running_loss = 0.0
 
-    bar = tqdm(enumerate(dataloader), total=len(dataloader))
-    for step, data in bar:
+    # bar = tqdm(enumerate(dataloader), total=len(dataloader))
+    for step, data in enumerate(dataloader): # bar:
         ids = data["input_ids"]
         mask = data["attention_mask"]
         targets = data["target"]
@@ -60,8 +60,8 @@ def valid_one_epoch(model, dataloader, criterion, accelerator, epoch):
     dataset_size = 0
     running_loss = 0.0
 
-    bar = tqdm(enumerate(dataloader), total=len(dataloader))
-    for step, data in bar:
+    # bar = tqdm(enumerate(dataloader), total=len(dataloader))
+    for step, data in enumerate(dataloader): # bar:
         ids = data["input_ids"]
         mask = data["attention_mask"]
         targets = data["target"]
