@@ -44,4 +44,4 @@ wd: 0.000001
 
 # hardware
 cpu: true # [true, false]
-amp: no # ["no", "fp16", "bf16"]
+amp: "no" # ["no", "fp16", "bf16"]
