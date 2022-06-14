@@ -8,12 +8,12 @@ train_base: !join [*IBASE, train/]
 test_base: !join [*IBASE, test/]
 
 # generated: &GBASE D:\Kevin\Machine Learning\FeedbackPEA\generated\ # local
-generated: &GBASE /kaggle/working/FeedbackEPA-Kaggle/generated # kaggle
+generated: &GBASE /kaggle/working/generated # kaggle
 train_folds: !join [*GBASE, train_folds.csv]
 label_enc: !join [*GBASE, label_enc.pkl]
 
 # weights_save: &WBASE D:\Kevin\Machine Learning\FeedbackPEA\weights\ # local
-weights_save: &WBASE /kaggle/working/FeedbackEPA-Kaggle/weights/ # kaggle
+weights_save: &WBASE /kaggle/working/weights/ # kaggle
 
 # model names and paths
 model_name: &MODEL microsoft/deberta-v3-base
