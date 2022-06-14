@@ -16,50 +16,59 @@ from .loss_opt import get_criterion, get_optimizer, get_scheduler
 from .trainer import get_trainer
 from .utils import seed_everything
 
-print(f"*** Training on folds: {config['tr_folds']} ***")
 
-for fold in config['tr_folds']:
-    seed_everything(config['seed'])
+def run(index): 
+    print(f"*** Training on folds: {config['tr_folds']} ***")
 
-    print(f"{y_}====== Fold: {fold} ======{sr_}")
-    # run = wandb.init(project='FeedBack',
-    #                  config=CONFIG,
-    #                  job_type='Train',
-    #                  group=CONFIG['group'],
-    #                  tags=[CONFIG['model_name'], f'{HASH_NAME}'],
-    #                  name=f'{HASH_NAME}-fold-{fold}',
-    #                  anonymous='must')
+    for fold in config['tr_folds']:
+        seed_everything(config['seed'])
 
-    accelerator = Accelerator()
-    print(f"running on device: {accelerator.device}")
-    if torch.cuda.is_available():
-        print("[INFO] Using GPU: {}\n".format(torch.cuda.get_device_name()))
+        print(f"{y_}====== Fold: {fold} ======{sr_}")
+        # run = wandb.init(project='FeedBack',
+        #                  config=CONFIG,
+        #                  job_type='Train',
+        #                  group=CONFIG['group'],
+        #                  tags=[CONFIG['model_name'], f'{HASH_NAME}'],
+        #                  name=f'{HASH_NAME}-fold-{fold}',
+        #                  anonymous='must')
 
-    # Create dataloaders, model, optimizer, scheduler, criterion etc
-    model = get_model()
-    train_loader, valid_loader = get_loaders(fold=fold)
-    optimizer = get_optimizer(model)
-    scheduler = get_scheduler(optimizer)
-    criterion = get_criterion()
+        accelerator = Accelerator()
+        print(f"running on device: {accelerator.device}")
+        if torch.cuda.is_available():
+            print("[INFO] Using GPU: {}\n".format(torch.cuda.get_device_name()))
 
-    model, train_loader, valid_loader, optimizer, scheduler = accelerator.prepare(
-        model, train_loader, valid_loader, optimizer, scheduler
-    )
+        # Create dataloaders, model, optimizer, scheduler, criterion etc
+        model = get_model()
+        train_loader, valid_loader = get_loaders(fold=fold)
+        optimizer = get_optimizer(model)
+        scheduler = get_scheduler(optimizer)
+        criterion = get_criterion()
 
-    model, history = get_trainer(
-        model=model,
-        train_loader=train_loader,
-        valid_loader=valid_loader,
-        optimizer=optimizer,
-        scheduler=scheduler,
-        criterion=criterion,
-        accelerator=accelerator,
-        num_epochs=config["epochs"],
-        fold=fold,
-    )
+        model, train_loader, valid_loader, optimizer, scheduler = accelerator.prepare(
+            model, train_loader, valid_loader, optimizer, scheduler
+        )
 
-    # run.finish()
+        model, history = get_trainer(
+            model=model,
+            train_loader=train_loader,
+            valid_loader=valid_loader,
+            optimizer=optimizer,
+            scheduler=scheduler,
+            criterion=criterion,
+            accelerator=accelerator,
+            num_epochs=config["epochs"],
+            fold=fold,
+        )
 
-    del model, history, train_loader, valid_loader
-    _ = gc.collect()
-    print()
+        # run.finish()
+
+        del model, history, train_loader, valid_loader
+        _ = gc.collect()
+        print()
+
+if __name__ == "__main__":
+    if config['tpu']:
+        import torch_xla.distributed.xla_multiprocessing as xmp
+        xmp.spawn(run, args=())
+    else:
+        run(0)
