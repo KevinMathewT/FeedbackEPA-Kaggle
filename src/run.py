@@ -16,9 +16,9 @@ from .loss_opt import get_criterion, get_optimizer, get_scheduler
 from .trainer import get_trainer
 from .utils import seed_everything
 
-print(f"*** Training on folds: {config['train_folds']} ***")
+print(f"*** Training on folds: {config['tr_folds']} ***")
 
-for fold in config['train_folds']:
+for fold in config['tr_folds']:
     seed_everything(config['seed'])
 
     print(f"{y_}====== Fold: {fold} ======{sr_}")

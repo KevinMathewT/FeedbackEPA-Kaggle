@@ -22,7 +22,7 @@ tokenizer_path: *MODEL
 # kfold cv
 folds: 5
 fold_type: "group" # ["stratified", "group"]
-train_folds: [0]
+tr_folds: [0]
 
 # model params
 num_classes: 3
