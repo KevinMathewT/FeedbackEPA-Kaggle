@@ -1,4 +1,5 @@
 import gc
+from time import time
 from tqdm import tqdm
 
 import torch
@@ -13,6 +14,7 @@ def train_one_epoch(
 
     dataset_size = 0
     running_loss = 0.0
+    st = time()
 
     # bar = tqdm(enumerate(dataloader), total=len(dataloader))
     for step, data in enumerate(dataloader): # bar:
@@ -43,7 +45,7 @@ def train_one_epoch(
         epoch_loss = running_loss / dataset_size
 
         if step % 10 == 0:
-            print(f"[{epoch}/{config['epochs']}][{str(step):5s}/{len(dataloader)}] train loss: {epoch_loss:1.5f} | lr: {optimizer.param_groups[0]['lr']}")
+            print(f"[{epoch}/{config['epochs']}][{str(step):5s}/{len(dataloader)}] train loss: {epoch_loss:1.5f} | lr: {optimizer.param_groups[0]['lr']:1.5f} | time: {time() - st}s")
         # optimizer.param_groups[0]["lr"]
         # bar.set_postfix(
         #     Epoch=epoch, Train_Loss=epoch_loss, LR=optimizer.param_groups[0]["lr"]
@@ -78,7 +80,7 @@ def valid_one_epoch(model, dataloader, criterion, accelerator, epoch):
         epoch_loss = running_loss / dataset_size
 
         if step % 10 == 0:
-            print(f"[{epoch}/{config['epochs']}][{str(step):5s}/{len(dataloader)}] valid loss: {epoch_loss:1.5f}")
+            print(f"[{epoch}/{config['epochs']}][{str(step):5s}/{len(dataloader)}] valid loss: {epoch_loss:1.5f} | time: {time() - st}s")
         # bar.set_postfix(Epoch=epoch, Valid_Loss=epoch_loss)
 
     gc.collect()
