@@ -5,6 +5,7 @@ b_ = Fore.BLUE
 y_ = Fore.YELLOW
 sr_ = Style.RESET_ALL
 
+import torch
 from accelerate import Accelerator, DistributedType
 
 from config import config
@@ -29,6 +30,8 @@ for fold in range(0, config["folds"]):
 
     accelerator = Accelerator(cpu=config["cpu"], mixed_precision=config["amp"])
     print(f"running on device: {accelerator.device}")
+    if torch.cuda.is_available():
+        print("[INFO] Using GPU: {}\n".format(torch.cuda.get_device_name()))
 
     # Create dataloaders, model, optimizer, scheduler, criterion etc
     model = get_model()

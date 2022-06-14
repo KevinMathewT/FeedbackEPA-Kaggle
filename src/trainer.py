@@ -31,9 +31,6 @@ def get_trainer(
     # To automatically log gradients
     # wandb.watch(model, log_freq=100)
 
-    if torch.cuda.is_available():
-        print("[INFO] Using GPU: {}\n".format(torch.cuda.get_device_name()))
-
     start = time.time()
     best_model_wts = copy.deepcopy(model.state_dict())
     best_epoch_loss = np.inf
