@@ -1,4 +1,4 @@
-# paths
+### paths
 # input: &IBASE D:\Kevin\Machine Learning\FeedbackPEA\input\ # local
 input: &IBASE /kaggle/input/feedback-prize-effectiveness/ # kaggle
 train_csv: !join [*IBASE, train.csv]
@@ -15,40 +15,40 @@ label_enc: !join [*GBASE, label_enc.pkl]
 # weights_save: &WBASE D:\Kevin\Machine Learning\FeedbackPEA\weights\ # local
 weights_save: &WBASE /kaggle/working/weights/ # kaggle
 
-# model names and paths
+### model names and paths
 model_name: &MODEL microsoft/deberta-v3-base
 tokenizer_path: *MODEL
 
-# kfold cv
+### kfold cv
 folds: 5
 fold_type: "group" # ["stratified", "group"]
 tr_folds: [0]
 
-# model params
+### model params
 num_classes: 3
 
-# train params
+### train params
 epochs: 3
 n_accumulate: 1
 max_length: 512
 train_bs: 8
 valid_bs: 16
 
-# scheduler
+### scheduler
 scheduler: CosineAnnealingLR # [CosineAnnealingLR, CosineAnnealingWarmRestarts, None]
 T_max: 500
 min_lr: 0.000001
 
-# optimizer
+### optimizer
 lr: 0.00001
 wd: 0.000001
 
-# hardware
+### hardware
 cpu: false # [true, false]
 amp: "no" # ["no", "fp16", "bf16"]
 
-# seed
+### seed
 seed: 42
 
-# logging
+### logging
 freq: 100
