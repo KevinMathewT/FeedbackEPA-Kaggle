@@ -13,8 +13,11 @@ from .dataloader import get_loaders
 from .model import get_model
 from .loss_opt import get_criterion, get_optimizer, get_scheduler
 from .trainer import get_trainer
+from .utils import seed_everything
 
 for fold in range(0, config["folds"]):
+    seed_everything(config['seed'])
+
     print(f"{y_}====== Fold: {fold} ======{sr_}")
     # run = wandb.init(project='FeedBack',
     #                  config=CONFIG,

@@ -8,8 +8,11 @@ from sklearn.preprocessing import LabelEncoder
 from sklearn.model_selection import StratifiedKFold, GroupKFold
 
 from config import config
+from .utils import seed_everything
 
 if __name__ == "__main__":
+    seed_everything(config['seed'])
+
     print(os.getcwd())
     train = pd.read_csv(config["train_csv"])
     test = pd.read_csv(config["test_csv"])
