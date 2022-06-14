@@ -19,6 +19,7 @@ from .utils import seed_everything
 
 def run(index): 
     print(f"*** Training on folds: {config['tr_folds']} ***")
+    accelerator = Accelerator()
 
     for fold in config['tr_folds']:
         accelerator.print(index)
@@ -31,7 +32,6 @@ def run(index):
         #                  name=f'{HASH_NAME}-fold-{fold}',
         #                  anonymous='must')
 
-        accelerator = Accelerator()
         accelerator.print(f"running on device: {accelerator.device}")
         if torch.cuda.is_available():
             print("[INFO] Using GPU: {}\n".format(torch.cuda.get_device_name()))
@@ -67,7 +67,7 @@ def run(index):
 
 if __name__ == "__main__":
     seed_everything(config['seed'])
-    
+
     if config['tpu']:
         import torch_xla.distributed.xla_multiprocessing as xmp
         xmp.spawn(run, args=())
