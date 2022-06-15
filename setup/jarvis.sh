@@ -1,6 +1,7 @@
 pwd
 sudo apt-get install unzip
 rm -rf /home/working/
+mkdir /home/working/
 mkdir /home/working/input/
 mkdir /home/working/generated/
 mkdir /home/working/weights/
@@ -8,11 +9,14 @@ mkdir /home/working/weights/
 cd /home/working/
 git init
 git pull https://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@github.com/KevinMathewT/FeedbackEPA-Kaggle
+sleep 2
 cp /home/working/setup/kaggle.json /home/.kaggle/kaggle.json
 
 cd /home/working/input/
 kaggle competitions download -c feedback-prize-effectiveness
-unzip feedback-prize-effectiveness.zip -d .
+unzip feedback-prize-effectiveness.zip -d . > /dev/null
+
+pip install accelerate
 
 cd /home/working/
 git init
