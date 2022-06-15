@@ -1,7 +1,7 @@
 ### paths
 # input: &IBASE D:\Kevin\Machine Learning\FeedbackPEA\input\ # local
 # input: &IBASE /kaggle/input/feedback-prize-effectiveness/ # kaggle
-input: &IBASE /home/working/input/feedback-prize-effectiveness/ # jarvis
+input: &IBASE /home/working/input/ # jarvis
 train_csv: !join [*IBASE, train.csv]
 test_csv: !join [*IBASE, test.csv]
 sample_csv: !join [*IBASE, sample_submission.csv]
