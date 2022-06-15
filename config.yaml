@@ -1,6 +1,7 @@
 ### paths
 # input: &IBASE D:\Kevin\Machine Learning\FeedbackPEA\input\ # local
-input: &IBASE /kaggle/input/feedback-prize-effectiveness/ # kaggle
+# input: &IBASE /kaggle/input/feedback-prize-effectiveness/ # kaggle
+input: &IBASE /home/input/feedback-prize-effectiveness/ # jarvis
 train_csv: !join [*IBASE, train.csv]
 test_csv: !join [*IBASE, test.csv]
 sample_csv: !join [*IBASE, sample_submission.csv]
@@ -8,12 +9,14 @@ train_base: !join [*IBASE, train/]
 test_base: !join [*IBASE, test/]
 
 # generated: &GBASE D:\Kevin\Machine Learning\FeedbackPEA\generated\ # local
-generated: &GBASE /kaggle/working/generated/ # kaggle
+# generated: &GBASE /kaggle/working/generated/ # kaggle
+generated: &GBASE /home/generated/ # jarvis
 train_folds: !join [*GBASE, train_folds.csv]
 label_enc: !join [*GBASE, label_enc.pkl]
 
 # weights_save: &WBASE D:\Kevin\Machine Learning\FeedbackPEA\weights\ # local
-weights_save: &WBASE /kaggle/working/weights/ # kaggle
+# weights_save: &WBASE /kaggle/working/weights/ # kaggle
+weights_save: &WBASE /home/weights/ # jarvis
 
 ### model names and paths
 model_name: &MODEL microsoft/deberta-v3-base
@@ -21,7 +24,7 @@ tokenizer_path: *MODEL
 
 ### kfold cv
 folds: 5
-fold_type: "group" # ["stratified", "group"]
+fold_type: "stratified_group" # ["stratified", "group", "stratified_group"]
 tr_folds: [0]
 
 ### model params
