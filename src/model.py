@@ -139,7 +139,7 @@ class FeedBackModel(nn.Module):
         self.config = AutoConfig.from_pretrained(model_name)
         self.config.update({"output_hidden_states": True})
         self.model = AutoModel.from_pretrained(model_name, config=self.config)
-        self.pooler = models_dict[config['pooler']]()
+        self.pooler = models_dict[config['pooler']](model_config=self.config)
 
     def forward(self, ids, mask):
         out = self.model(input_ids=ids, attention_mask=mask)
