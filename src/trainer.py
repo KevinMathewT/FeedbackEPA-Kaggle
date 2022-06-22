@@ -61,8 +61,8 @@ def get_trainer(
         history["Valid Loss"].append(val_epoch_loss)
 
         # Log the metrics
-        wandb.log({"Train Loss": train_epoch_loss})
-        wandb.log({"Valid Loss": val_epoch_loss})
+        wandb.log({"train epoch loss": train_epoch_loss})
+        wandb.log({"valid epoch loss": val_epoch_loss})
 
         # deep copy the model
         if val_epoch_loss <= best_epoch_loss:
