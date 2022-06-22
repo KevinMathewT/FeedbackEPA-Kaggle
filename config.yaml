@@ -42,7 +42,7 @@ valid_bs: 16
 
 ### scheduler
 scheduler: cosine # ['linear', 'cosine', 'cosine_with_restarts', 'polynomial', 'constant', 'constant_with_warmup', CosineAnnealingLR, CosineAnnealingWarmRestarts, None]
-warmup_steps: 100
+warmup_steps: 0
 T_max: 500
 min_lr: 0.000001
 
