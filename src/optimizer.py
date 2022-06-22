@@ -4,11 +4,10 @@ import pandas as pd
 
 import torch
 import torch.nn as nn
-from torch.optim import lr_scheduler
+from torch.optim import lr_scheduler, AdamW
 from torch.optim.optimizer import Optimizer
 
 import transformers
-from transformers import AdamW
 
 from config import config
 
