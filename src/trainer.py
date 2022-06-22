@@ -1,6 +1,7 @@
 import gc
 import time
 import copy
+import wandb
 from pathlib import Path
 from collections import defaultdict
 from colorama import Fore, Back, Style
@@ -29,7 +30,7 @@ def get_trainer(
     fold,
 ):
     # To automatically log gradients
-    # wandb.watch(model, log_freq=100)
+    wandb.watch(model, log_freq=100)
 
     start = time.time()
     best_model_wts = copy.deepcopy(model.state_dict())
@@ -60,8 +61,8 @@ def get_trainer(
         history["Valid Loss"].append(val_epoch_loss)
 
         # Log the metrics
-        # wandb.log({"Train Loss": train_epoch_loss})
-        # wandb.log({"Valid Loss": val_epoch_loss})
+        wandb.log({"Train Loss": train_epoch_loss})
+        wandb.log({"Valid Loss": val_epoch_loss})
 
         # deep copy the model
         if val_epoch_loss <= best_epoch_loss:

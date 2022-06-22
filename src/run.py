@@ -1,4 +1,5 @@
 import gc
+import wandb
 from colorama import Fore, Back, Style
 
 b_ = Fore.BLUE
@@ -25,13 +26,9 @@ def run(index):
     for fold in config["tr_folds"]:
         accelerator.print(index)
         accelerator.print(f"{y_}====== Fold: {fold} ======{sr_}")
-        # run = wandb.init(project='FeedBack',
-        #                  config=CONFIG,
-        #                  job_type='Train',
-        #                  group=CONFIG['group'],
-        #                  tags=[CONFIG['model_name'], f'{HASH_NAME}'],
-        #                  name=f'{HASH_NAME}-fold-{fold}',
-        #                  anonymous='must')
+        run = wandb.init(project='FeedBackPEA',
+                         config=config,
+                         job_type='Train')
 
         accelerator.print(f"running on device: {accelerator.device}")
         if torch.cuda.is_available():
