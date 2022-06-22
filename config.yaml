@@ -68,4 +68,4 @@ seed: 42
 freq: 5
 
 ### kaggle save config
-title: debertav3-attention-adamw-linear-btll-fp16
+title: debertav3-attention-adamw-linear-smoothce-fp16
