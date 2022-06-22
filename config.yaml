@@ -60,4 +60,4 @@ amp: "fp16" # ["no", "fp16", "bf16"]
 seed: 42
 
 ### logging
-freq: 25
+freq: 5
