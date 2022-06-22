@@ -213,9 +213,16 @@ def get_optimizer_params(model):
     multiplier = 0.975
     classifier_lr = config["pooler_lr"]
 
+    num_layers = 50
+    layer_names = [n for (n, w) in model.named_parameters()]
+    while not any([f"encoder.layer.{num_layers}." in n for n in layer_names]):
+        num_layers -= 1
+
+    print(f"number of layers: {num_layers + 1}")
+
     parameters = []
     lr = model_init_lr
-    for layer in range(11, -1, -1):
+    for layer in range(num_layers, -1, -1):
         layer_params = {
             "params": [
                 p for n, p in model.named_parameters() if f"encoder.layer.{layer}." in n
