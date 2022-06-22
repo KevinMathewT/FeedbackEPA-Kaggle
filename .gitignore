@@ -161,4 +161,5 @@ cython_debug/
 
 input/*
 generated/*
+weights/*
 setup/*.sh
