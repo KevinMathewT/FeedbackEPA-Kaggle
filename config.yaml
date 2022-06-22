@@ -19,7 +19,7 @@ weights_save: &WBASE /kaggle/working/weights/ # kaggle
 # weights_save: &WBASE /home/working/weights/ # jarvis
 
 ### model names and paths
-model_name: &MODEL microsoft/deberta-v3-base
+model_name: &MODEL microsoft/deberta-v3-small
 # model_name: &MODEL distilbert-base-uncased
 tokenizer_path: *MODEL
 
