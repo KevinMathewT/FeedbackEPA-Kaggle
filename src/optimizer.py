@@ -228,6 +228,7 @@ def get_optimizer_params(model):
                 p for n, p in model.named_parameters() if f"encoder.layer.{layer}." in n
             ],
             "lr": lr,
+            "weight_decay": config['wd'],
         }
         parameters.append(layer_params)
         lr *= multiplier
@@ -238,6 +239,7 @@ def get_optimizer_params(model):
             if "layer_norm" in n or "linear" in n or "pooling" in n or "pooler" in n
         ],
         "lr": classifier_lr,
+        "weight_decay": config['wd'],
     }
     parameters.append(classifier_params)
     return parameters

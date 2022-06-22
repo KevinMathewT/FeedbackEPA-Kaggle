@@ -19,7 +19,7 @@ weights_save: &WBASE /kaggle/working/weights/ # kaggle
 # weights_save: &WBASE /home/working/weights/ # jarvis
 
 ### model names and paths
-model_name: &MODEL microsoft/deberta-v3-small
+model_name: &MODEL microsoft/deberta-v3-base
 # model_name: &MODEL distilbert-base-uncased
 tokenizer_path: *MODEL
 
@@ -42,14 +42,14 @@ valid_bs: 16
 
 ### scheduler
 scheduler: linear # ['linear', 'cosine', 'cosine_with_restarts', 'polynomial', 'constant', 'constant_with_warmup', CosineAnnealingLR, CosineAnnealingWarmRestarts, None]
-warmup_steps: 0
+warmup_steps: 200
 T_max: 500
 min_lr: 0.000001
 
 ### optimizer
-optimizer: "lamb"
+optimizer: "adamw" # [adamw, lamb, radam]
 model_lr: 0.00002
-pooler_lr: 0.00003
+pooler_lr: 0.000022
 wd: 0.000001
 
 ### hardware
