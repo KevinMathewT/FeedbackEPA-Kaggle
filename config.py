@@ -14,4 +14,4 @@ with open("config.yaml", "r") as config_file:
     pprint("*** Configurations: ***")
     pprint(config)
     pprint("*** Config loaded succesfully. ***")
-    pprint("***" * 7)
+    pprint("----" * 10)

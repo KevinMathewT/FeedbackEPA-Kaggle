@@ -12,7 +12,7 @@ from config import config
 
 from .dataloader import get_loaders
 from .model import get_model
-from .loss_opt import get_optimizer, get_scheduler
+from .optimizer import get_optimizer, get_scheduler
 from .criterion import get_criterion
 from .trainer import get_trainer
 from .utils import seed_everything
