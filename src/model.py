@@ -7,10 +7,10 @@ from config import config
 
 
 class MeanPooling(nn.Module):
-    def __init__(self):
+    def __init__(self, model_config):
         super(MeanPooling, self).__init__()
         self.drop = nn.Dropout(p=0.2)
-        self.fc = nn.Linear(self.config.hidden_size, config["num_classes"])
+        self.fc = nn.Linear(model_config.hidden_size, config["num_classes"])
 
     def forward(self, model_out, attention_mask):
         last_hidden_state = model_out.last_hidden_state
@@ -28,10 +28,10 @@ class MeanPooling(nn.Module):
 
 
 class MaxPooling(nn.Module):
-    def __init__(self):
+    def __init__(self, model_config):
         super(MaxPooling, self).__init__()
         self.drop = nn.Dropout(p=0.2)
-        self.fc = nn.Linear(self.config.hidden_size, config["num_classes"])
+        self.fc = nn.Linear(model_config.hidden_size, config["num_classes"])
 
     def forward(self, model_out, attention_mask):
         last_hidden_state = model_out.last_hidden_state
@@ -49,10 +49,10 @@ class MaxPooling(nn.Module):
 
 
 class MeanMaxPooling(nn.Module):
-    def __init__(self):
+    def __init__(self, model_config):
         super(MeanMaxPooling, self).__init__()
         self.drop = nn.Dropout(p=0.2)
-        self.fc = nn.Linear(2 * self.config.hidden_size, config["num_classes"])
+        self.fc = nn.Linear(2 * model_config.hidden_size, config["num_classes"])
 
     def forward(self, model_out, attention_mask):
         last_hidden_state = model_out.last_hidden_state
@@ -80,7 +80,7 @@ class MeanMaxPooling(nn.Module):
 
 
 class Conv1DPooling(nn.Module):
-    def __init__(self):
+    def __init__(self, model_config):
         super(Conv1DPooling, self).__init__()
         self.cnn1 = nn.Conv1d(768, 256, kernel_size=2, padding=1)
         self.cnn2 = nn.Conv1d(256, config["num_classes"], kernel_size=2, padding=1)
@@ -95,10 +95,10 @@ class Conv1DPooling(nn.Module):
 
 
 class AttentionPooling(nn.Module):
-    def __init__(self):
+    def __init__(self, model_config):
         super(AttentionPooling, self).__init__()
         self.drop = nn.Dropout(p=0.2)
-        self.fc = nn.Linear(self.config.hidden_size, config["num_classes"])
+        self.fc = nn.Linear(model_config.hidden_size, config["num_classes"])
         self.attention = nn.Sequential(
             nn.Linear(768, 512), nn.Tanh(), nn.Linear(512, 1), nn.Softmax(dim=1)
         )
@@ -114,9 +114,9 @@ class AttentionPooling(nn.Module):
 
 
 class DefaultPooling(nn.Module):
-    def __init__(self):
+    def __init__(self, model_config):
         super(DefaultPooling, self).__init__()
-        self.fc = nn.Linear(self.config.hidden_size, config["num_classes"])
+        self.fc = nn.Linear(model_config.hidden_size, config["num_classes"])
 
     def forward(self, model_out, attention_mask):
         pooler_output = model_out.pooler_output
@@ -124,13 +124,22 @@ class DefaultPooling(nn.Module):
         return logits
 
 
+models_dict = {
+    "max": MaxPooling,
+    "mean": MeanPooling,
+    "mean_max": MeanMaxPooling,
+    "conv1d": Conv1DPooling,
+    "attention": AttentionPooling,
+    "default": DefaultPooling,
+}
+
 class FeedBackModel(nn.Module):
     def __init__(self, model_name):
         super(FeedBackModel, self).__init__()
         self.config = AutoConfig.from_pretrained(model_name)
         self.config.update({"output_hidden_states": True})
         self.model = AutoModel.from_pretrained(model_name, config=self.config)
-        self.pooler = DefaultPooling()
+        self.pooler = models_dict[config['pooler']]()
 
     def forward(self, ids, mask):
         out = self.model(input_ids=ids, attention_mask=mask)

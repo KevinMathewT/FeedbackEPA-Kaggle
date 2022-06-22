@@ -1,10 +1,13 @@
 import math
 
+import pandas as pd
+
 import torch
 import torch.nn as nn
 from torch.optim import lr_scheduler
 from torch.optim.optimizer import Optimizer
 
+import transformers
 from transformers import AdamW
 
 from config import config
@@ -206,14 +209,13 @@ class Lamb(Optimizer):
 
 def get_optimizer_params(model):
     # differential learning rate and weight decay
-
-    model_init_lr = 3e-5
+    model_init_lr = config["model_lr"]
     multiplier = 0.975
-    classifier_lr = 2e-5
+    classifier_lr = config["pooler_lr"]
 
     parameters = []
     lr = model_init_lr
-    for layer in range(23, -1, -1):
+    for layer in range(11, -1, -1):
         layer_params = {
             "params": [
                 p for n, p in model.named_parameters() if f"encoder.layer.{layer}." in n
@@ -226,7 +228,7 @@ def get_optimizer_params(model):
         "params": [
             p
             for n, p in model.named_parameters()
-            if "layer_norm" in n or "linear" in n or "pooling" in n
+            if "layer_norm" in n or "linear" in n or "pooling" in n or "pooler" in n
         ],
         "lr": classifier_lr,
     }
@@ -234,15 +236,16 @@ def get_optimizer_params(model):
     return parameters
 
 
-def get_criterion():
-    return nn.CrossEntropyLoss()
-
-
 def get_optimizer(model):
-    return AdamW(model.parameters(), lr=config["lr"], weight_decay=config["wd"])
+    params = get_optimizer_params(model)
+    return AdamW(params)
 
 
 def get_scheduler(optimizer):
+    df = pd.read_csv(config["train_folds"])
+    num_training_examples = len(df[df.fold != 0].reset_index(drop=True))
+    num_training_steps = int(math.ceil(num_training_examples / config['train_bs'])) * config['epochs']
+
     if config["scheduler"] == "CosineAnnealingLR":
         scheduler = lr_scheduler.CosineAnnealingLR(
             optimizer, T_max=config["T_max"], eta_min=config["min_lr"]
@@ -253,5 +256,7 @@ def get_scheduler(optimizer):
         )
     elif config["scheduler"] == "None":
         return None
+    else:
+        return transformers.get_scheduler(name=config['scheduler'], optimizer=optimizer, num_warmup_steps=100, num_training_steps=num_training_steps)
 
     return scheduler

@@ -31,6 +31,7 @@ tr_folds: [0]
 ### model params
 num_classes: 3
 output_hidden_states: false # [true, false]
+pooler: "default"
 
 ### train params
 epochs: 3
@@ -40,12 +41,13 @@ train_bs: 8
 valid_bs: 16
 
 ### scheduler
-scheduler: CosineAnnealingLR # [CosineAnnealingLR, CosineAnnealingWarmRestarts, None]
+scheduler: get_cosine_schedule_with_warmup # [CosineAnnealingLR, CosineAnnealingWarmRestarts, None, get_cosine_schedule_with_warmup]
 T_max: 500
 min_lr: 0.000001
 
 ### optimizer
-lr: 0.00003
+model_lr: 0.00003
+pooler_lr: 0.00002
 wd: 0.000001
 
 ### hardware
