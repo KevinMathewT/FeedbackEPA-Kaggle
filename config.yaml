@@ -47,8 +47,8 @@ T_max: 500
 min_lr: 0.000001
 
 ### optimizer
-model_lr: 0.00008
-pooler_lr: 0.00009
+model_lr: 0.00001
+pooler_lr: 0.00001
 wd: 0.000001
 
 ### hardware
