@@ -21,4 +21,4 @@ f.close()
 
 print(kaggle_config)
 
-kaggle.api.dataset_create_new(config["weights_save"], dir_mode=True)
+kaggle.api.dataset_create_new(config["weights_save"], dir_mode="zip")
