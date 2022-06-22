@@ -241,10 +241,7 @@ def get_optimizer(model):
     return AdamW(params)
 
 
-def get_scheduler(optimizer):
-    df = pd.read_csv(config["train_folds"])
-    num_training_examples = len(df[df.fold != 0].reset_index(drop=True))
-    num_training_steps = int(math.ceil(num_training_examples / config['train_bs'])) * config['epochs']
+def get_scheduler(optimizer, num_training_steps):
 
     if config["scheduler"] == "CosineAnnealingLR":
         scheduler = lr_scheduler.CosineAnnealingLR(
@@ -257,6 +254,6 @@ def get_scheduler(optimizer):
     elif config["scheduler"] == "None":
         return None
     else:
-        return transformers.get_scheduler(name=config['scheduler'], optimizer=optimizer, num_warmup_steps=100, num_training_steps=num_training_steps)
+        return transformers.get_scheduler(name=config['scheduler'], optimizer=optimizer, num_warmup_steps=config['warmup_steps'], num_training_steps=num_training_steps-config['warmup_steps'])
 
     return scheduler

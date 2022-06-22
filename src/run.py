@@ -41,7 +41,7 @@ def run(index):
         model = get_model()
         train_loader, valid_loader = get_loaders(fold=fold)
         optimizer = get_optimizer(model)
-        scheduler = get_scheduler(optimizer)
+        scheduler = get_scheduler(optimizer, num_training_steps=(len(train_loader) * config['epochs']))
         criterion = get_criterion()
 
         model, train_loader, valid_loader, optimizer, scheduler = accelerator.prepare(
