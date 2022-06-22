@@ -242,10 +242,16 @@ def get_optimizer_params(model):
     parameters.append(classifier_params)
     return parameters
 
+optimizer_map = {
+    "adamw": AdamW,
+    "lamb": Lamb,
+    "radam": RAdam,
+}
 
 def get_optimizer(model):
     params = get_optimizer_params(model)
-    return AdamW(params)
+    return optimizer_map[config['optimizer']](params)
+    
 
 
 def get_scheduler(optimizer, num_training_steps):
