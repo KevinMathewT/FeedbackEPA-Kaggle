@@ -53,7 +53,7 @@ wd: 0.000001
 ### hardware
 cpu: false # [true, false]
 tpu: false # [true, false]
-amp: "bf16" # ["no", "fp16", "bf16"]
+amp: "fp16" # ["no", "fp16", "bf16"]
 
 ### seed
 seed: 42
