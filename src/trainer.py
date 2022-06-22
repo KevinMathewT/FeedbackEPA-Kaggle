@@ -1,7 +1,8 @@
 import gc
-from pathlib import Path
 import time
 import copy
+import kaggle
+from pathlib import Path
 from collections import defaultdict
 from colorama import Fore, Back, Style
 
@@ -71,7 +72,9 @@ def get_trainer(
             best_epoch_loss = val_epoch_loss
             # run.summary["Best Loss"] = best_epoch_loss
             best_model_wts = copy.deepcopy(model.state_dict())
-            PATH = Path(config['weights_save']) / f"Loss-Fold-{fold}-{epoch}.bin"
+            PATH = Path(config['weights_save']) / f"Loss-Fold-{fold}-{epoch}"
+            # kaggle.api.dataset_initialize(Path(config['weights_save']))
+            # kaggle.api.dataset_create_new(Path(config['weights_save']), public=False, )
             # torch.save(model.state_dict(), PATH)
             accelerator.save_state(PATH)
             # Save a model file from the current directory

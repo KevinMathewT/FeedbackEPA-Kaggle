@@ -76,6 +76,14 @@ if __name__ == "__main__":
         lambda x: open(Path(config["test_base"]) / f"{x}.txt").read()
     )
 
+    # Changing Concluding Statement to Conclusion
+    train['discourse_type'] = train['discourse_type'].apply(
+        lambda x: x if x != 'Concluding Statement' else 'Conclusion'
+    )
+    test['discourse_type'] = test['discourse_type'].apply(
+        lambda x: x if x != 'Concluding Statement' else 'Conclusion'
+    )
+
     target_map = {"Adequate": 1, "Effective": 2, "Ineffective": 0}
 
     train["target"] = train["discourse_effectiveness"].map(target_map)

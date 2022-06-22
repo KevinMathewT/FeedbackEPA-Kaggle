@@ -161,4 +161,4 @@ cython_debug/
 
 input/*
 generated/*
-setup/jarvis.sh
+setup/*.sh

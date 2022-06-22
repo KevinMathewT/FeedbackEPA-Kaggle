@@ -17,11 +17,11 @@ from .trainer import get_trainer
 from .utils import seed_everything
 
 
-def run(index): 
+def run(index):
     print(f"*** Training on folds: {config['tr_folds']} ***")
-    accelerator = Accelerator()
+    accelerator = Accelerator(cpu=config["cpu"], mixed_precision=config["amp"])
 
-    for fold in config['tr_folds']:
+    for fold in config["tr_folds"]:
         accelerator.print(index)
         accelerator.print(f"{y_}====== Fold: {fold} ======{sr_}")
         # run = wandb.init(project='FeedBack',
@@ -65,11 +65,13 @@ def run(index):
         _ = gc.collect()
         print()
 
-if __name__ == "__main__":
-    seed_everything(config['seed'])
 
-    if config['tpu']:
+if __name__ == "__main__":
+    seed_everything(config["seed"])
+
+    if config["tpu"]:
         import torch_xla.distributed.xla_multiprocessing as xmp
+
         xmp.spawn(run, args=())
     else:
         run(0)
