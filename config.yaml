@@ -20,7 +20,7 @@ weights_save: &WBASE /kaggle/working/weights/ # kaggle
 
 ### model names and paths
 # model_name: &MODEL microsoft/deberta-v3-base
-model_name: &MODEL distilbert-base-uncased
+model_name: &MODEL roberta-base
 tokenizer_path: *MODEL
 
 ### kfold cv
