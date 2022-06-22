@@ -20,7 +20,7 @@ weights_save: &WBASE /kaggle/working/weights/ # kaggle
 
 ### model names and paths
 # model_name: &MODEL microsoft/deberta-v3-base
-model_name: &MODEL roberta-base
+model_name: &MODEL distilbert-base-uncased
 tokenizer_path: *MODEL
 
 ### kfold cv
@@ -31,7 +31,7 @@ tr_folds: [0]
 ### model params
 num_classes: 3
 output_hidden_states: false # [true, false]
-pooler: "default"
+pooler: "mean"
 
 ### train params
 epochs: 3
