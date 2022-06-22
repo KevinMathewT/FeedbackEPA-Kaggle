@@ -41,7 +41,7 @@ train_bs: 8
 valid_bs: 16
 
 ### scheduler
-scheduler: get_cosine_schedule_with_warmup # [CosineAnnealingLR, CosineAnnealingWarmRestarts, None, get_cosine_schedule_with_warmup]
+scheduler: cosine # ['linear', 'cosine', 'cosine_with_restarts', 'polynomial', 'constant', 'constant_with_warmup', CosineAnnealingLR, CosineAnnealingWarmRestarts, None]
 T_max: 500
 min_lr: 0.000001
 
