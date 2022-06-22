@@ -53,7 +53,7 @@ T_max: 500
 min_lr: 0.000001
 
 ### criterion
-criterion: "smoothce" # [smoothce, ce, btll]
+criterion: "smooth_ce" # [smooth_ce, ce, btll]
 smoothing: 0.1
 
 ### hardware
