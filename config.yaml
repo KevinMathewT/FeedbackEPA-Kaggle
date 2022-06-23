@@ -70,4 +70,4 @@ seed: 42
 freq: 5
 
 ### kaggle save config
-title: debertav3-md-attention-adamw-linear-ce-fp16-context
+title: deb3-md-attn-adamw-lnr-ce-fp16-context
