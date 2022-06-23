@@ -33,7 +33,7 @@ tr_folds: [0]
 num_classes: 3
 output_hidden_states: false # [true, false]
 pooler: "mean_max"
-multi_drop: true
+multi_drop: false
 
 ### train params
 epochs: 3
