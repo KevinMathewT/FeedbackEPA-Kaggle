@@ -44,8 +44,8 @@ valid_bs: 16
 
 ### optimizer
 optimizer: "adamw" # [adamw, lamb, radam]
-model_lr: 0.00003
-pooler_lr: 0.00003
+model_lr: 0.00004
+pooler_lr: 0.00004
 wd: 0.001
 
 ### scheduler
