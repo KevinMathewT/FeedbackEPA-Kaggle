@@ -9,7 +9,10 @@ from config import config
 class MultiDropout(nn.Module):
     def __init__(self, model_config):
         super(MultiDropout, self).__init__()
-        self.fc = nn.Linear(model_config.hidden_size, config["num_classes"])
+        if config['pooler'] == 'mean_max':
+            self.fc = nn.Linear(2 * model_config.hidden_size, config["num_classes"])
+        else:
+            self.fc = nn.Linear(model_config.hidden_size, config["num_classes"])
 
         # Multi Dropouts
         self.dropout1 = nn.Dropout(0.1)
