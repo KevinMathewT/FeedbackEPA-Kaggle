@@ -33,6 +33,7 @@ tr_folds: [0]
 num_classes: 3
 output_hidden_states: false # [true, false]
 pooler: "mean_max"
+multi_drop: true
 
 ### train params
 epochs: 3
@@ -69,4 +70,4 @@ seed: 42
 freq: 5
 
 ### kaggle save config
-title: debertav3-mean_max-adamw-cosine-btll-fp16-context
+title: debertav3-md-mean_max-adamw-cosine-btll-fp16-context
