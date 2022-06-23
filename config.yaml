@@ -69,4 +69,4 @@ seed: 42
 freq: 5
 
 ### kaggle save config
-title: debertav3-attention-adamw-linear-smoothce-fp16
+title: debertav3-mean_max-adamw-cosine-btll-fp16-context
