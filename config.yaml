@@ -1,6 +1,6 @@
 ### paths
-input: &IBASE D:\Kevin\Machine Learning\FeedbackPEA\input\ # local
-# input: &IBASE /kaggle/input/feedback-prize-effectiveness/ # kaggle
+# input: &IBASE D:\Kevin\Machine Learning\FeedbackPEA\input\ # local
+input: &IBASE /kaggle/input/feedback-prize-effectiveness/ # kaggle
 # input: &IBASE /home/working/input/ # jarvis
 train_csv: !join [*IBASE, train.csv]
 test_csv: !join [*IBASE, test.csv]
@@ -8,14 +8,14 @@ sample_csv: !join [*IBASE, sample_submission.csv]
 train_base: !join [*IBASE, train/]
 test_base: !join [*IBASE, test/]
 
-generated: &GBASE D:\Kevin\Machine Learning\FeedbackPEA\generated\ # local
-# generated: &GBASE /kaggle/working/generated/ # kaggle
+# generated: &GBASE D:\Kevin\Machine Learning\FeedbackPEA\generated\ # local
+generated: &GBASE /kaggle/working/generated/ # kaggle
 # generated: &GBASE /home/working/generated/ # jarvis
 train_folds: !join [*GBASE, train_folds.csv]
 label_enc: !join [*GBASE, label_enc.pkl]
 
-weights_save: &WBASE D:\Kevin\Machine Learning\FeedbackPEA\weights\ # local
-# weights_save: &WBASE /kaggle/working/weights/ # kaggle
+# weights_save: &WBASE D:\Kevin\Machine Learning\FeedbackPEA\weights\ # local
+weights_save: &WBASE /kaggle/working/weights/ # kaggle
 # weights_save: &WBASE /home/working/weights/ # jarvis
 
 ### model names and paths
