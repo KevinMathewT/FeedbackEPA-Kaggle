@@ -118,6 +118,7 @@ class MeanMaxPooling(nn.Module):
         if config['multi_drop']:
             outputs = self.md(mean_max_embeddings)
 
+        print(outputs.size())
         return outputs
 
 
