@@ -1,7 +1,7 @@
 ### paths
 # input: &IBASE D:\Kevin\Machine Learning\FeedbackPEA\input\ # local
-input: &IBASE /kaggle/input/feedback-prize-effectiveness/ # kaggle
-# input: &IBASE /home/working/input/ # jarvis
+# input: &IBASE /kaggle/input/feedback-prize-effectiveness/ # kaggle
+input: &IBASE /home/working/input/ # jarvis
 train_csv: !join [*IBASE, train.csv]
 test_csv: !join [*IBASE, test.csv]
 sample_csv: !join [*IBASE, sample_submission.csv]
@@ -9,18 +9,18 @@ train_base: !join [*IBASE, train/]
 test_base: !join [*IBASE, test/]
 
 # generated: &GBASE D:\Kevin\Machine Learning\FeedbackPEA\generated\ # local
-generated: &GBASE /kaggle/working/generated/ # kaggle
-# generated: &GBASE /home/working/generated/ # jarvis
+# generated: &GBASE /kaggle/working/generated/ # kaggle
+generated: &GBASE /home/working/generated/ # jarvis
 train_folds: !join [*GBASE, train_folds.csv]
 label_enc: !join [*GBASE, label_enc.pkl]
 
 # weights_save: &WBASE D:\Kevin\Machine Learning\FeedbackPEA\weights\ # local
-weights_save: &WBASE /kaggle/working/weights/ # kaggle
-# weights_save: &WBASE /home/working/weights/ # jarvis
+# weights_save: &WBASE /kaggle/working/weights/ # kaggle
+weights_save: &WBASE /home/working/weights/ # jarvis
 
 ### model names and paths
-# model_name: &MODEL microsoft/deberta-v3-base
-model_name: &MODEL microsoft/deberta-base
+model_name: &MODEL microsoft/deberta-v3-base
+# model_name: &MODEL microsoft/deberta-base
 # model_name: &MODEL distilbert-base-uncased
 tokenizer_path: *MODEL
 
@@ -32,7 +32,7 @@ tr_folds: [0]
 ### model params
 num_classes: 3
 output_hidden_states: false # [true, false]
-pooler: "mean_max"
+pooler: "attention" # [max, mean, mean_max, conv1d, attention, default]
 multi_drop: true # [true, false]
 
 ### train params
@@ -49,13 +49,13 @@ pooler_lr: 0.00003
 wd: 0.001
 
 ### scheduler
-scheduler: cosine # ['linear', 'cosine', 'cosine_with_restarts', 'polynomial', 'constant', 'constant_with_warmup', CosineAnnealingLR, CosineAnnealingWarmRestarts, None]
-warmup_steps: 0
+scheduler: linear # ['linear', 'cosine', 'cosine_with_restarts', 'polynomial', 'constant', 'constant_with_warmup', CosineAnnealingLR, CosineAnnealingWarmRestarts, None]
+warmup_steps: 200
 T_max: 500
 min_lr: 0.000001
 
 ### criterion
-criterion: "btll" # [smooth_ce, ce, btll]
+criterion: "ce" # [smooth_ce, ce, btll]
 smoothing: 0.1
 
 ### hardware
@@ -70,4 +70,4 @@ seed: 42
 freq: 5
 
 ### kaggle save config
-title: debertav3-md-mean_max-adamw-cosine-btll-fp16-context
+title: debertav3-md-attention-adamw-linear-ce-fp16-context
