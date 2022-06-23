@@ -218,30 +218,50 @@ def get_optimizer_params(model):
         num_layers -= 1
 
     print(f"number of layers: {num_layers + 1}")
+    no_decay = ["bias", "LayerNorm.weight"]
 
     parameters = []
     lr = model_init_lr
-    for layer in range(num_layers, -1, -1):
-        layer_params = {
+
+    # for layer in range(num_layers, -1, -1):
+    #     layer_params = {
+    #         "params": [
+    #             p for n, p in model.named_parameters() if f"encoder.layer.{layer}." in n
+    #         ],
+    #         "lr": lr,
+    #         "weight_decay": config['wd'],
+    #     }
+    #     parameters.append(layer_params)
+    #     lr *= multiplier
+    # classifier_params = {
+    #     "params": [
+    #         p
+    #         for n, p in model.named_parameters()
+    #         if "layer_norm" in n or "linear" in n or "pooling" in n or "pooler" in n
+    #     ],
+    #     "lr": classifier_lr,
+    #     "weight_decay": config['wd'],
+    # }
+    # parameters.append(classifier_params)
+
+    parameters = [
+        {
             "params": [
-                p for n, p in model.named_parameters() if f"encoder.layer.{layer}." in n
+                p for n, p in model.named_parameters() if not any(nd in n for nd in no_decay)
             ],
             "lr": lr,
-            "weight_decay": config['wd'],
-        }
-        parameters.append(layer_params)
-        lr *= multiplier
-    classifier_params = {
-        "params": [
-            p
-            for n, p in model.named_parameters()
-            if "layer_norm" in n or "linear" in n or "pooling" in n or "pooler" in n
-        ],
-        "lr": classifier_lr,
-        "weight_decay": config['wd'],
-    }
-    parameters.append(classifier_params)
+            "weight_decay": 0.001,
+        },
+        {
+            "params": [
+                p for n, p in model.named_parameters() if any(nd in n for nd in no_decay)
+            ],
+            "lr": lr,
+            "weight_decay": 0.0,
+        },
+    ]
     return parameters
+
 
 optimizer_map = {
     "adamw": AdamW,
@@ -249,10 +269,10 @@ optimizer_map = {
     "radam": RAdam,
 }
 
+
 def get_optimizer(model):
     params = get_optimizer_params(model)
-    return optimizer_map[config['optimizer']](params)
-    
+    return optimizer_map[config["optimizer"]](params)
 
 
 def get_scheduler(optimizer, num_training_steps):
@@ -268,6 +288,11 @@ def get_scheduler(optimizer, num_training_steps):
     elif config["scheduler"] == "None":
         return None
     else:
-        return transformers.get_scheduler(name=config['scheduler'], optimizer=optimizer, num_warmup_steps=config['warmup_steps'], num_training_steps=num_training_steps-config['warmup_steps'])
+        return transformers.get_scheduler(
+            name=config["scheduler"],
+            optimizer=optimizer,
+            num_warmup_steps=config["warmup_steps"],
+            num_training_steps=num_training_steps - config["warmup_steps"],
+        )
 
     return scheduler

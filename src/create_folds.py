@@ -1,7 +1,10 @@
 import os
+import sys
 import yaml
 import joblib
 import random
+import difflib
+from tqdm import tqdm
 from pathlib import Path
 from collections import Counter, defaultdict
 
@@ -10,8 +13,14 @@ import numpy as np
 from sklearn.preprocessing import LabelEncoder
 from sklearn.model_selection import StratifiedKFold, GroupKFold
 
+from transformers import AutoTokenizer
+
 from config import config
 from .utils import seed_everything
+
+tqdm.pandas()
+pd.set_option("display.max_columns", 500)
+tokenizer = AutoTokenizer.from_pretrained(config["tokenizer_path"])
 
 
 def stratified_group_k_fold(X, y, groups, k, seed=None):
@@ -61,27 +70,160 @@ def stratified_group_k_fold(X, y, groups, k, seed=None):
         yield train_indices, test_indices
 
 
+def LCSubStr(X, Y):
+    m = len(X)
+    n = len(Y)
+
+    result = 0
+    end = 0
+    length = [[0 for j in range(m)] for i in range(2)]
+    currRow = 0
+
+    for i in range(0, m + 1):
+        for j in range(0, n + 1):
+            if i == 0 or j == 0:
+                length[currRow][j] = 0
+
+            elif X[i - 1] == Y[j - 1]:
+                length[currRow][j] = length[1 - currRow][j - 1] + 1
+
+                if length[currRow][j] > result:
+                    result = length[currRow][j]
+                    end = i - 1
+            else:
+                length[currRow][j] = 0
+
+        currRow = 1 - currRow
+
+    if result == 0:
+        return "-1"
+    return end - result + 1, end + 1
+
+
+def get_discource_context(meta):
+    essay = meta["text"]
+    discourse_type = meta["discourse_type"]
+    discourse_text = meta["discourse_text"].strip()
+
+    tokens = tokenizer.tokenize(
+        discourse_type + " " + discourse_text + " " + tokenizer.sep_token + " " + essay
+    )
+    print(len(tokens))
+
+    return essay
+
+
+essay_id_blocks = []
+
+
+def essay_id_apply(x):
+    essay_id = x["essay_id"].to_list()[0]
+    discourse_type = x["discourse_type"].tolist()
+    x["discourse_type"] = x["discourse_type"].map(
+        {
+            "Lead": 1,
+            "Position": 2,
+            "Claim": 3,
+            "Counterclaim": 4,
+            "Rebuttal": 5,
+            "Evidence": 6,
+            "Concluding Statement": 7,
+        }
+    )
+    x = x.sort_values("discourse_type")
+    x['discourse_text'] = x['discourse_text'].apply(lambda x: x.strip())
+
+    x["tokens_size"] = x["discourse_text"].apply(lambda x: len(tokenizer.tokenize(x)))
+    texts = x["discourse_text"].tolist()
+    tokens_sizes = x["tokens_size"].tolist()
+
+    essays = []
+
+    for i in range(x.shape[0]):
+        l = i - 1
+        r = i + 1
+        b = (
+            config["max_length"]
+            - 2 * tokens_sizes[i]
+            - len(tokenizer.tokenize(discourse_type[i]))
+            - 1
+        )
+        essay = texts[i]
+
+        while b > 0:
+            do_break = True
+            if l >= 0 and l < len(tokens_sizes) and tokens_sizes[l] <= b:
+                essay = texts[l] + " " + essay
+                b -= tokens_sizes[l]
+                l -= 1
+                do_break = False
+
+            if r >= 0 and r < len(tokens_sizes) and tokens_sizes[r] <= b:
+                essay = essay + " " + texts[r]
+                b -= tokens_sizes[r]
+                r += 1
+                do_break = False
+
+            if do_break:
+                break
+
+        essays.append(
+            discourse_type[i] + " " + texts[i] + " " + tokenizer.sep_token + " " + essay
+        )
+
+    x["text"] = essays
+    x["text_tokens_lengths"] = x["text"].apply(lambda x: len(tokenizer.tokenize(x)))
+
+    x["discourse_type"] = x["discourse_type"].map(
+        {
+            1: "Lead",
+            2: "Position",
+            3: "Claim",
+            4: "Counterclaim",
+            5: "Rebuttal",
+            6: "Evidence",
+            7: "Concluding Statement",
+        }
+    )
+
+    # if random.randint(1, 1000000) % 7 == 0:
+    #     print(x)
+    #     sys.exit(0)
+
+    essay_id_blocks.append(x)
+
+
 if __name__ == "__main__":
     seed_everything(config["seed"])
 
-    print(os.getcwd())
     train = pd.read_csv(config["train_csv"])
     test = pd.read_csv(config["test_csv"])
     sample_submission = pd.read_csv(config["sample_csv"])
 
-    train["text"] = train["essay_id"].apply(
-        lambda x: open(Path(config["train_base"]) / f"{x}.txt").read()
-    )
-    test["text"] = test["essay_id"].apply(
-        lambda x: open(Path(config["test_base"]) / f"{x}.txt").read()
-    )
+    essay_id_blocks = []
+    train.groupby("essay_id").apply(essay_id_apply)
+    train = pd.concat(essay_id_blocks, ignore_index=True)
+
+    essay_id_blocks = []
+    test.groupby("essay_id").apply(essay_id_apply)
+    test = pd.concat(essay_id_blocks, ignore_index=True)
+
+    # Getting essay full text
+    # train["text"] = train[["text", "discourse_type", "discourse_text"]].apply(
+    #     get_discource_context,
+    #     axis=1,
+    # )
+    # test["text"] = test[["text", "discourse_type", "discourse_text"]].apply(
+    #     get_discource_context,
+    #     axis=1,
+    # )
 
     # Changing Concluding Statement to Conclusion
-    train['discourse_type'] = train['discourse_type'].apply(
-        lambda x: x if x != 'Concluding Statement' else 'Conclusion'
+    train["discourse_type"] = train["discourse_type"].apply(
+        lambda x: x if x != "Concluding Statement" else "Conclusion"
     )
-    test['discourse_type'] = test['discourse_type'].apply(
-        lambda x: x if x != 'Concluding Statement' else 'Conclusion'
+    test["discourse_type"] = test["discourse_type"].apply(
+        lambda x: x if x != "Concluding Statement" else "Conclusion"
     )
 
     target_map = {"Adequate": 1, "Effective": 2, "Ineffective": 0}

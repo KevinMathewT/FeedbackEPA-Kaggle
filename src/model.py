@@ -9,7 +9,7 @@ from config import config
 class MeanPooling(nn.Module):
     def __init__(self, model_config):
         super(MeanPooling, self).__init__()
-        self.drop = nn.Dropout(p=0.2)
+        self.drop = nn.Dropout(p=0.1)
         self.fc = nn.Linear(model_config.hidden_size, config["num_classes"])
 
     def forward(self, model_out, attention_mask):
@@ -146,6 +146,35 @@ class FeedBackModel(nn.Module):
         out = self.pooler(out, mask)
         return out
 
+class FeedbackMultiDropout(nn.Module):
+    def __init__(self, model_name):
+        super(FeedbackMultiDropout, self).__init__()
+        self.config = AutoConfig.from_pretrained(model_name)
+        self.config.update({"output_hidden_states": True})
+        self.model = AutoModel.from_pretrained(model_name, config=self.config)
+        self.pooler = models_dict[config['pooler']](model_config=self.config)
+        
+        # Multi Dropouts
+        self.dropout1 = nn.Dropout(0.1)
+        self.dropout2 = nn.Dropout(0.2)
+        self.dropout3 = nn.Dropout(0.3)
+        self.dropout4 = nn.Dropout(0.4)
+        self.dropout5 = nn.Dropout(0.5)
+
+    def forward(self, ids, mask):
+        out = self.model(input_ids=ids, attention_mask=mask)
+        out = self.pooler(out, mask)
+
+        logits1 = self.output(self.dropout1(out))
+        logits2 = self.output(self.dropout2(out))
+        logits3 = self.output(self.dropout3(out))
+        logits4 = self.output(self.dropout4(out))
+        logits5 = self.output(self.dropout5(out))
+
+        out = (logits1 + logits2 + logits3 + logits4 + logits5) / 5
+
+        return out
+
 
 def get_model():
-    return FeedBackModel(config["model_name"])
+    return FeedbackMultiDropout(config["model_name"])
