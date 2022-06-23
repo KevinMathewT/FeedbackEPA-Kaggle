@@ -29,6 +29,7 @@ class MultiDropout(nn.Module):
         logits5 = self.fc(self.dropout5(out))
 
         out = (logits1 + logits2 + logits3 + logits4 + logits5) / 5
+        return out
 
 class MeanPooling(nn.Module):
     def __init__(self, model_config):
@@ -118,7 +119,6 @@ class MeanMaxPooling(nn.Module):
         if config['multi_drop']:
             outputs = self.md(mean_max_embeddings)
 
-        print(outputs.size())
         return outputs
 
 
