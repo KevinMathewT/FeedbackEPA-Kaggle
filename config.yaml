@@ -39,7 +39,7 @@ multi_drop: true # [true, false]
 epochs: 3
 n_accumulate: 1
 max_length: 512
-train_bs: 16
+train_bs: 12
 valid_bs: 16
 
 ### optimizer
