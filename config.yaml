@@ -33,7 +33,7 @@ tr_folds: [0]
 num_classes: 3
 output_hidden_states: false # [true, false]
 pooler: "weighted" # [max, mean, mean_max, conv1d, attention, default, weighted]
-multi_drop: true # [true, false]
+multi_drop: false # [true, false]
 
 ### train params
 epochs: 3
