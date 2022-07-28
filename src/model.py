@@ -234,7 +234,7 @@ class FeedBackModel(nn.Module):
         self.model = AutoModel.from_pretrained(model_name, config=self.config)
         self.model.gradient_checkpointing_enable()
         self.pooler = models_dict[config["pooler"]](model_config=self.config)
-        self.pooler.init(self._init_weights)
+        self.pooler.apply(self._init_weights)
 
     def _update_num_layers(self, model):
         num_layers = 50
