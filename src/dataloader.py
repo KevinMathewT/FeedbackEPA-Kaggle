@@ -82,7 +82,7 @@ class Collate:
 
 
 def get_loaders(fold):
-    tokenizer = AutoTokenizer.from_pretrained(config["tokenizer_path"])
+    tokenizer = AutoTokenizer.from_pretrained(config["tokenizer_path"], use_fast=True)
     # collate_fn = DataCollatorWithPadding(tokenizer=tokenizer)
 
     df = pd.read_csv(config["train_folds"])
@@ -121,7 +121,7 @@ def get_loaders(fold):
 
 if __name__ == "__main__":
     df = pd.read_csv(config["train_folds"])
-    tokenizer = AutoTokenizer.from_pretrained(config["tokenizer_path"])
+    tokenizer = AutoTokenizer.from_pretrained(config["tokenizer_path"], use_fast=True)
 
     train_dataset = FeedBackDataset(
         df, tokenizer=tokenizer, max_length=config["max_length"]

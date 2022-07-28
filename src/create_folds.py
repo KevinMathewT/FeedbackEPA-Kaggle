@@ -1,5 +1,7 @@
 import os
+import re
 import sys
+import math
 import yaml
 import joblib
 import random
@@ -20,7 +22,9 @@ from .utils import seed_everything
 
 tqdm.pandas()
 pd.set_option("display.max_columns", 500)
-tokenizer = AutoTokenizer.from_pretrained(config["tokenizer_path"])
+tokenizer = AutoTokenizer.from_pretrained(config["tokenizer_path"], use_fast=True)
+context = "train"
+essay_id_blocks = []
 
 
 def stratified_group_k_fold(X, y, groups, k, seed=None):
@@ -100,23 +104,7 @@ def LCSubStr(X, Y):
     return end - result + 1, end + 1
 
 
-def get_discource_context(meta):
-    essay = meta["text"]
-    discourse_type = meta["discourse_type"]
-    discourse_text = meta["discourse_text"].strip()
-
-    tokens = tokenizer.tokenize(
-        discourse_type + " " + discourse_text + " " + tokenizer.sep_token + " " + essay
-    )
-    print(len(tokens))
-
-    return essay
-
-
-essay_id_blocks = []
-
-
-def essay_id_apply(x):
+def other_discourse_type_context(x):
     essay_id = x["essay_id"].to_list()[0]
     discourse_type = x["discourse_type"].tolist()
     x["discourse_type"] = x["discourse_type"].map(
@@ -131,7 +119,7 @@ def essay_id_apply(x):
         }
     )
     x = x.sort_values("discourse_type")
-    x['discourse_text'] = x['discourse_text'].apply(lambda x: x.strip())
+    x["discourse_text"] = x["discourse_text"].apply(lambda x: x.strip())
 
     x["tokens_size"] = x["discourse_text"].apply(lambda x: len(tokenizer.tokenize(x)))
     texts = x["discourse_text"].tolist()
@@ -193,6 +181,132 @@ def essay_id_apply(x):
     essay_id_blocks.append(x)
 
 
+def surrounding_context(x):
+    essay_id = x["essay_id"].to_list()[0]
+    essay = open(
+        Path(config[context + "_base"]) / (essay_id + ".txt"), "rt", encoding="utf-8"
+    ).read()
+    discourse_type = x["discourse_type"].tolist()
+    x["discourse_type"] = x["discourse_type"].map(
+        {
+            "Lead": 1,
+            "Position": 2,
+            "Claim": 3,
+            "Counterclaim": 4,
+            "Rebuttal": 5,
+            "Evidence": 6,
+            "Concluding Statement": 7,
+        }
+    )
+    x = x.sort_values("discourse_type")
+    x["discourse_text"] = x["discourse_text"].apply(lambda x: x.strip())
+
+    x["tokens_size"] = x["discourse_text"].apply(lambda x: len(tokenizer.tokenize(x)))
+    texts = x["discourse_text"].tolist()
+    tokens_sizes = x["tokens_size"].tolist()
+
+    essays = []
+
+    for i in range(x.shape[0]):
+        b = (
+            config["max_length"]
+            - 2 * tokens_sizes[i]
+            - len(tokenizer.tokenize(discourse_type[i]))
+            - 1
+        )
+        discourse = texts[i]
+        search_text = discourse[
+            len(discourse) // 4 : len(discourse) // 4 + len(discourse) // 2
+        ]
+
+        if search_text not in essay:
+            print("*" * 10)
+            print(essay_id)
+            print("*" * 10)
+            print(search_text)
+            print("*" * 10)
+            print(essay)
+            print("*" * 10)
+            sys.exit(0)
+
+        essays.append(
+            discourse_type[i] + " " + texts[i] + " " + tokenizer.sep_token + " " + essay
+        )
+
+    x["text"] = essays
+    x["text_tokens_lengths"] = x["text"].apply(lambda x: len(tokenizer.tokenize(x)))
+
+    x["discourse_type"] = x["discourse_type"].map(
+        {
+            1: "Lead",
+            2: "Position",
+            3: "Claim",
+            4: "Counterclaim",
+            5: "Rebuttal",
+            6: "Evidence",
+            7: "Concluding Statement",
+        }
+    )
+
+    # if random.randint(1, 1000000) % 7 == 0:
+    #     print(x)
+    #     sys.exit(0)
+
+    essay_id_blocks.append(x)
+
+
+def surrounding_context(meta):
+    essay_id = meta["essay_id"]
+    essay = open(
+        Path(config[context + "_base"]) / (essay_id + ".txt"), "rt", encoding="utf-8"
+    ).read()
+    discourse_type = meta["discourse_type"]
+    discourse_text = meta["discourse_text"].strip()
+
+    search_text = discourse_text[
+        len(discourse_text) // 4 : len(discourse_text) // 4 + len(discourse_text) // 2
+    ]
+    s = essay.find(discourse_text)
+    b = (
+        config["max_length"]
+        - 2 * len(tokenizer.tokenize(discourse_text))
+        - len(tokenizer.tokenize(discourse_type))
+        - 1
+    )
+
+    x = len(tokenizer.tokenize(essay[:s]))
+    y = len(tokenizer.tokenize(essay[s:]))
+    p = b // 2
+    q = b - p
+
+    # if x > y:
+
+    tokens = tokenizer.tokenize(
+        discourse_type + " " + discourse_text + " " + tokenizer.sep_token + " " + essay
+    )
+    print(len(tokens))
+
+    return essay
+
+
+def get_discource_context(meta):
+    essay_id = meta["essay_id"]
+    essay = open(
+        Path(config[context + "_base"]) / (essay_id + ".txt"), "rt", encoding="utf-8"
+    ).read()
+    discourse_type = meta["discourse_type"]
+    discourse_text = meta["discourse_text"].strip()
+    discourse_text = re.sub(r" \Z", "", discourse_text)
+    text = (
+        discourse_type + tokenizer.sep_token + discourse_text + tokenizer.sep_token + essay
+    )
+
+    # tokens = tokenizer.tokenize(text)
+    # print(len(tokens))
+
+    return text
+
+
 if __name__ == "__main__":
     seed_everything(config["seed"])
 
@@ -200,21 +314,34 @@ if __name__ == "__main__":
     test = pd.read_csv(config["test_csv"])
     sample_submission = pd.read_csv(config["sample_csv"])
 
-    essay_id_blocks = []
-    train.groupby("essay_id").apply(essay_id_apply)
-    train = pd.concat(essay_id_blocks, ignore_index=True)
-
-    essay_id_blocks = []
-    test.groupby("essay_id").apply(essay_id_apply)
-    test = pd.concat(essay_id_blocks, ignore_index=True)
+    # Other Discourse type Context
+    # context = "train"
+    # essay_id_blocks = []
+    # train.groupby("essay_id").apply(surrounding_context)
+    # train = pd.concat(essay_id_blocks, ignore_index=True)
+    #
+    # context = "test"
+    # essay_id_blocks = []
+    # test.groupby("essay_id").apply(surrounding_context)
+    # test = pd.concat(essay_id_blocks, ignore_index=True)
 
     # Getting essay full text
-    # train["text"] = train[["text", "discourse_type", "discourse_text"]].apply(
-    #     get_discource_context,
+    train["text"] = train[["essay_id", "discourse_type", "discourse_text"]].apply(
+        get_discource_context,
+        axis=1,
+    )
+    test["text"] = test[["essay_id", "discourse_type", "discourse_text"]].apply(
+        get_discource_context,
+        axis=1,
+    )
+
+    # Surrounding Context
+    # train["text"] = train[["essay_id", "discourse_type", "discourse_text"]].apply(
+    #     surrounding_context,
     #     axis=1,
     # )
-    # test["text"] = test[["text", "discourse_type", "discourse_text"]].apply(
-    #     get_discource_context,
+    # test["text"] = test[["essay_id", "discourse_type", "discourse_text"]].apply(
+    #     surrounding_context,
     #     axis=1,
     # )
 
@@ -234,7 +361,7 @@ if __name__ == "__main__":
     if config["fold_type"] == "stratified":
         # Stratified KFold
         skf = StratifiedKFold(
-            n_splits=config["folds"], shuffle=True, random_state=config["folds"]
+            n_splits=config["folds"], shuffle=True, random_state=config["seed"]
         )
         for i, (train_index, test_index) in enumerate(
             skf.split(train, train["target"])
