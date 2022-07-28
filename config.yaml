@@ -71,4 +71,4 @@ seed: 42
 freq: 5
 
 ### kaggle save config
-title: debv3-weighted-adamw-cos-sce-fp16-essay
+title: debv3-weigh-adamw-cos-sce-fp16-essay
