@@ -71,4 +71,4 @@ seed: 42
 freq: 5
 
 ### kaggle save config
-title: deb-md-attn-adamw-lnr-sce-fp16-context
+title: deb-weighted-adamw-cos-sce-fp16-essay
