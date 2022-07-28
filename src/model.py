@@ -193,7 +193,13 @@ class WeightedLayerPooling(nn.Module):
         weighted_average = (weight_factor * all_layer_embedding).sum(
             dim=0
         ) / self.layer_weights.sum()
-        return weighted_average
+
+        if not config["multi_drop"]:
+            outputs = weighted_average
+        if config["multi_drop"]:
+            outputs = self.md(weighted_average)
+
+        return outputs
 
 
 class DefaultPooling(nn.Module):

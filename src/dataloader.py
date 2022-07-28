@@ -15,7 +15,7 @@ class FeedBackDataset(Dataset):
         self.tokenizer = tokenizer
         self.discourse_type = df["discourse_type"].values
         self.discourse = df["discourse_text"].values
-        self.essay = df["text"].values
+        self.text = df["text"].values
         self.targets = df["discourse_effectiveness"].values
 
     def __len__(self):
@@ -24,8 +24,7 @@ class FeedBackDataset(Dataset):
     def __getitem__(self, index):
         discourse_type = self.discourse_type[index]
         discourse = self.discourse[index]
-        essay = self.essay[index]
-        text = essay
+        text = self.text[index]
         inputs = self.tokenizer.encode_plus(
             text,
             add_special_tokens=True,

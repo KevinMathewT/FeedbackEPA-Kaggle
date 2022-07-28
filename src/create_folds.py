@@ -3,11 +3,14 @@ import re
 import sys
 import math
 import yaml
+import codecs
 import joblib
 import random
 import difflib
+from typing import Tuple
 from tqdm import tqdm
 from pathlib import Path
+from text_unidecode import unidecode
 from collections import Counter, defaultdict
 
 import pandas as pd
@@ -25,6 +28,29 @@ pd.set_option("display.max_columns", 500)
 tokenizer = AutoTokenizer.from_pretrained(config["tokenizer_path"], use_fast=True)
 context = "train"
 essay_id_blocks = []
+
+
+def replace_encoding_with_utf8(error: UnicodeError) -> Tuple[bytes, int]:
+    return error.object[error.start : error.end].encode("utf-8"), error.end
+
+
+def replace_decoding_with_cp1252(error: UnicodeError) -> Tuple[str, int]:
+    return error.object[error.start : error.end].decode("cp1252"), error.end
+
+
+codecs.register_error("replace_encoding_with_utf8", replace_encoding_with_utf8)
+codecs.register_error("replace_decoding_with_cp1252", replace_decoding_with_cp1252)
+
+
+def resolve_encodings_and_normalize(text: str) -> str:
+    text = (
+        text.encode("raw_unicode_escape")
+        .decode("utf-8", errors="replace_decoding_with_cp1252")
+        .encode("cp1252", errors="replace_encoding_with_utf8")
+        .decode("utf-8", errors="replace_decoding_with_cp1252")
+    )
+    text = unidecode(text)
+    return text
 
 
 def stratified_group_k_fold(X, y, groups, k, seed=None):
@@ -291,14 +317,18 @@ def surrounding_context(meta):
 
 def get_discource_context(meta):
     essay_id = meta["essay_id"]
-    essay = open(
-        Path(config[context + "_base"]) / (essay_id + ".txt"), "rt", encoding="utf-8"
-    ).read()
+    essay = resolve_encodings_and_normalize(
+        open(Path(config[context + "_base"]) / (essay_id + ".txt"), "r").read()
+    )
     discourse_type = meta["discourse_type"]
     discourse_text = meta["discourse_text"].strip()
     discourse_text = re.sub(r" \Z", "", discourse_text)
     text = (
-        discourse_type + tokenizer.sep_token + discourse_text + tokenizer.sep_token + essay
+        discourse_type
+        + tokenizer.sep_token
+        + discourse_text
+        + tokenizer.sep_token
+        + essay
     )
 
     # tokens = tokenizer.tokenize(text)
@@ -313,6 +343,13 @@ if __name__ == "__main__":
     train = pd.read_csv(config["train_csv"])
     test = pd.read_csv(config["test_csv"])
     sample_submission = pd.read_csv(config["sample_csv"])
+
+    train["discourse_text"] = train["discourse_text"].apply(
+        lambda x: resolve_encodings_and_normalize(x)
+    )
+    test["discourse_text"] = test["discourse_text"].apply(
+        lambda x: resolve_encodings_and_normalize(x)
+    )
 
     # Other Discourse type Context
     # context = "train"
@@ -330,6 +367,7 @@ if __name__ == "__main__":
         get_discource_context,
         axis=1,
     )
+    context = "test"
     test["text"] = test[["essay_id", "discourse_type", "discourse_text"]].apply(
         get_discource_context,
         axis=1,
