@@ -163,3 +163,4 @@ input/*
 generated/*
 weights/*
 setup/*.sh
+wandb/
