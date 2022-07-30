@@ -163,5 +163,6 @@ input/*
 generated/*
 weights/*
 setup/*.sh
+setup/kaggle.json
 wandb/
 .vscode/
