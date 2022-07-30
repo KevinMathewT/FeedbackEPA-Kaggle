@@ -181,8 +181,10 @@ class WeightedLayerPooling(nn.Module):
                 )
             )
         )
+        self.regressor = nn.Sequential(nn.Linear(768, 3))
 
-    def forward(self, all_hidden_states):
+    def forward(self, model_out, attention_mask):
+        all_hidden_states = torch.stack(model_out.hidden_states)
         all_layer_embedding = all_hidden_states[self.layer_start :, :, :, :]
         weight_factor = (
             self.layer_weights.unsqueeze(-1)
@@ -193,9 +195,10 @@ class WeightedLayerPooling(nn.Module):
         weighted_average = (weight_factor * all_layer_embedding).sum(
             dim=0
         ) / self.layer_weights.sum()
+        weighted_average = weighted_average[:, 0]
 
         if not config["multi_drop"]:
-            outputs = weighted_average
+            outputs = self.regressor(weighted_average)
         if config["multi_drop"]:
             outputs = self.md(weighted_average)
 

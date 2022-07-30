@@ -210,7 +210,7 @@ def get_optimizer_params(model):
     # differential learning rate and weight decay
     model_init_lr = config["model_lr"]
     multiplier = 0.975
-    classifier_lr = config["pooler_lr"]
+    pooler_lr = config["pooler_lr"]
 
     num_layers = 50
     layer_names = [n for (n, w) in model.named_parameters()]
@@ -218,7 +218,7 @@ def get_optimizer_params(model):
         num_layers -= 1
 
     print(f"number of layers: {num_layers + 1}")
-    no_decay = ["bias", "LayerNorm.weight"]
+    no_decay = ["bias", "LayerNorm.bias", "LayerNorm.weight"]
 
     parameters = []
     lr = model_init_lr
@@ -247,16 +247,25 @@ def get_optimizer_params(model):
     parameters = [
         {
             "params": [
-                p for n, p in model.named_parameters() if not any(nd in n for nd in no_decay)
+                p
+                for n, p in model.named_parameters()
+                if not any(nd in n for nd in no_decay) and "model" in n
             ],
             "lr": lr,
-            "weight_decay": 0.001,
+            "weight_decay": config["wd"],
         },
         {
             "params": [
-                p for n, p in model.named_parameters() if any(nd in n for nd in no_decay)
+                p
+                for n, p in model.named_parameters()
+                if any(nd in n for nd in no_decay) and "model" in n
             ],
             "lr": lr,
+            "weight_decay": 0.0,
+        },
+        {
+            "params": [p for n, p in model.named_parameters() if "model" not in n],
+            "lr": pooler_lr,
             "weight_decay": 0.0,
         },
     ]
@@ -272,7 +281,11 @@ optimizer_map = {
 
 def get_optimizer(model):
     params = get_optimizer_params(model)
-    return optimizer_map[config["optimizer"]](params)
+
+    # Adam params
+    return optimizer_map[config["optimizer"]](
+        params, eps=config["eps"], betas=(config["b1"], config["b2"])
+    )
 
 
 def get_scheduler(optimizer, num_training_steps):
@@ -287,12 +300,25 @@ def get_scheduler(optimizer, num_training_steps):
         )
     elif config["scheduler"] == "None":
         return None
+    elif config["scheduler"] == "linear":
+        return transformers.get_linear_schedule_with_warmup(
+            optimizer,
+            num_warmup_steps=config["warmup_steps"],
+            num_training_steps=num_training_steps,
+        )
+    elif config["scheduler"] == "cosine":
+        return transformers.get_cosine_schedule_with_warmup(
+            optimizer,
+            num_warmup_steps=config["warmup_steps"],
+            num_training_steps=num_training_steps,
+            num_cycles=config["cycles"],
+        )
     else:
         return transformers.get_scheduler(
             name=config["scheduler"],
             optimizer=optimizer,
             num_warmup_steps=config["warmup_steps"],
-            num_training_steps=num_training_steps - config["warmup_steps"],
+            num_training_steps=num_training_steps,
         )
 
     return scheduler
