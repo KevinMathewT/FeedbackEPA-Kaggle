@@ -59,7 +59,7 @@ def run(index):
 
         # run.finish()
 
-        del model, history, train_loader, valid_loader
+        del model, history, train_loader, valid_loader, optimizer, scheduler, criterion
         _ = gc.collect()
         print()
 
