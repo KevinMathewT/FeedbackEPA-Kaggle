@@ -16,7 +16,7 @@ from .model import get_model
 from .optimizer import get_optimizer, get_scheduler
 from .criterion import get_criterion
 from .trainer import get_trainer
-from .utils import seed_everything
+from .utils import dump_tensors, seed_everything
 
 
 def run(index):
@@ -59,9 +59,11 @@ def run(index):
 
         # run.finish()
 
+        dump_tensors()
         del model, history, train_loader, valid_loader, optimizer, scheduler, criterion
         _ = gc.collect()
         torch.cuda.empty_cache()
+        dump_tensors()
         print()
 
 
