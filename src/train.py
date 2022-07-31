@@ -59,8 +59,6 @@ def train_one_epoch(
                 f"[{epoch}/{config['epochs']}][{str(step + 1):5s}/{len(dataloader)}] train loss: {epoch_loss:1.10f} | ce_loss: {epoch_ce_loss:1.10f} | lr: {optimizer.param_groups[0]['lr']:1.10f} | grad norm: {grad_norm:1.4f} | time: {time() - st:1.1f}s"
             )
 
-        break
-
     gc.collect()
 
     return epoch_loss
@@ -100,8 +98,6 @@ def valid_one_epoch(model, dataloader, criterion, accelerator, epoch):
             accelerator.print(
                 f"[{epoch}/{config['epochs']}][{str(step + 1):5s}/{len(dataloader)}] valid loss: {epoch_loss:1.10f} | ce_loss: {epoch_ce_loss:1.10f} | time: {time() - st:1.1f}s"
             )
-
-        break
 
     gc.collect()
 

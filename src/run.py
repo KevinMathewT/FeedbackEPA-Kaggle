@@ -26,7 +26,7 @@ def run(index):
         accelerator = Accelerator(cpu=config["cpu"], mixed_precision=config["amp"])
         accelerator.print(index)
         accelerator.print(f"{y_}====== Fold: {fold} ======{sr_}")
-        
+
         run = wandb.init(project='FeedBackPEA',
                          config=config,
                          job_type='Train')
@@ -60,11 +60,9 @@ def run(index):
 
         # run.finish()
 
-        dump_tensors()
         del model, history, train_loader, valid_loader, optimizer, scheduler, criterion, accelerator
         _ = gc.collect()
         torch.cuda.empty_cache()
-        dump_tensors()
         print()
 
 
