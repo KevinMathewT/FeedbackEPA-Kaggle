@@ -72,7 +72,7 @@ def get_trainer(
             best_epoch_loss = val_epoch_loss
             # run.summary["Best Loss"] = best_epoch_loss
             best_model_wts = copy.deepcopy(model.state_dict())
-            PATH = Path(config['weights_save']) / f"Loss-Fold-{fold}-{epoch}"
+            PATH = Path(config['weights_save']) / f"Loss-Fold-{fold}"
             # kaggle.api.dataset_initialize(Path(config['weights_save']))
             # kaggle.api.dataset_create_new(Path(config['weights_save']), public=False, )
             # torch.save(model.state_dict(), PATH)
