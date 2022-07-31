@@ -61,6 +61,7 @@ def run(index):
 
         del model, history, train_loader, valid_loader, optimizer, scheduler, criterion
         _ = gc.collect()
+        torch.cuda.empty_cache()
         print()
 
 
