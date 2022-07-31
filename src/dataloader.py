@@ -99,7 +99,7 @@ def get_loaders(fold):
         collate_fn=collate_fn,
         num_workers=2,
         shuffle=True,
-        pin_memory=True,
+        pin_memory=False,
         drop_last=True,
     )
     valid_loader = DataLoader(
@@ -108,7 +108,7 @@ def get_loaders(fold):
         collate_fn=collate_fn,
         num_workers=2,
         shuffle=False,
-        pin_memory=True,
+        pin_memory=False,
     )
 
     return train_loader, valid_loader
