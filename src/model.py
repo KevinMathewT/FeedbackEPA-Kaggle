@@ -208,14 +208,19 @@ class WeightedLayerPooling(nn.Module):
 class DefaultPooling(nn.Module):
     def __init__(self, model_config):
         super(DefaultPooling, self).__init__()
-        self.fc = nn.Linear(model_config.hidden_size, config["num_classes"])
+        self.regressor = nn.Linear(model_config.hidden_size, config["num_classes"])
         if config["multi_drop"]:
             self.md = MultiDropout(model_config=model_config)
 
     def forward(self, model_out, attention_mask):
-        pooler_output = model_out.pooler_output
-        logits = self.fc(pooler_output)
-        return logits
+        pooler_output = model_out.last_hidden_state[:, 0, :]
+        
+        if not config["multi_drop"]:
+            outputs = self.regressor(pooler_output)
+        if config["multi_drop"]:
+            outputs = self.md(pooler_output)
+
+        return outputs
 
 
 models_dict = {
