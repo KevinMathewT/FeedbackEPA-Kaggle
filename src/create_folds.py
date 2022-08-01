@@ -14,9 +14,9 @@ from pathlib import Path
 from text_unidecode import unidecode
 from collections import Counter, defaultdict
 
-import nltk
-from nltk.corpus import stopwords
-from nltk.tokenize import word_tokenize
+# import nltk
+# from nltk.corpus import stopwords
+# from nltk.tokenize import word_tokenize
 
 import pandas as pd
 import numpy as np
@@ -30,7 +30,7 @@ from .utils import seed_everything
 
 tqdm.pandas()
 pd.set_option("display.max_columns", 500)
-sws = stopwords.words("english") + ["n't",  "'s", "'ve"]
+# sws = stopwords.words("english") + ["n't",  "'s", "'ve"]
 tokenizer = AutoTokenizer.from_pretrained(config["tokenizer_path"], use_fast=True)
 context = "train"
 essay_id_blocks = []
