@@ -449,11 +449,11 @@ def main():
     # In distributed training, the .from_pretrained methods guarantee that only one local process can concurrently
     # download model & vocab.
     if args.config_name:
-        config = AutoConfig.from_pretrained(args.config_name)
+        model_config = AutoConfig.from_pretrained(args.config_name)
     elif args.model_name_or_path:
-        config = AutoConfig.from_pretrained(args.model_name_or_path)
+        model_config = AutoConfig.from_pretrained(args.model_name_or_path)
     else:
-        config = CONFIG_MAPPING[args.model_type]()
+        model_config = CONFIG_MAPPING[args.model_type]()
         logger.warning("You are instantiating a new config instance from scratch.")
 
     if args.tokenizer_name:
@@ -474,11 +474,11 @@ def main():
         model = AutoModelForMaskedLM.from_pretrained(
             args.model_name_or_path,
             from_tf=bool(".ckpt" in args.model_name_or_path),
-            config=config,
+            config=model_config,
         )
     else:
         logger.info("Training new model from scratch")
-        model = AutoModelForMaskedLM.from_config(config)
+        model = AutoModelForMaskedLM.from_config(model_config)
 
     model.gradient_checkpointing_enable()
     model.resize_token_embeddings(len(tokenizer))
