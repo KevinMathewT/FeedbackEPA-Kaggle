@@ -179,6 +179,8 @@ if __name__ == "__main__":
 
     model_config = AutoConfig.from_pretrained(model_name, output_hidden_states=True)
     model = AutoModelForMaskedLM.from_pretrained(model_name, config=model_config)
+    model.gradient_checkpointing_enable()
+
 
     if args.param_freeze:
         # if freeze, Write freeze settings here
