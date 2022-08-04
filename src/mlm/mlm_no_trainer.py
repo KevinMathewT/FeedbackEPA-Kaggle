@@ -281,6 +281,7 @@ def create_data():
 
 
 def main():
+    create_data()
     args = parse_args()
 
     # Initialize the accelerator. We will let the accelerator handle device placement for us in this example.
