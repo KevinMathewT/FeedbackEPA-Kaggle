@@ -17,6 +17,41 @@ from config import config
 b_ = Fore.BLUE
 sr_ = Style.RESET_ALL
 
+class Validator():
+    def __init__(self, model):
+        self.valid_freq_per_epoch = config['valid_freq_per_epoch']
+        self.best_epoch_loss = np.inf
+        self.best_model_wts = copy.deepcopy(model.state_dict())
+        self.history = defaultdict(list)
+
+    def validate(self, model, valid_loader, criterion, accelerator, epoch, index, fold):
+        print("\t" + ("*" * 5) + f" validation: epoch {epoch}, index {index} " + ("*" * 5))        
+        val_epoch_loss = valid_one_epoch(
+            model=model,
+            dataloader=valid_loader,
+            criterion=criterion,
+            accelerator=accelerator,
+            epoch=epoch,
+        )
+        self.history["Valid Loss"].append(val_epoch_loss)
+        wandb.log({"valid epoch loss": val_epoch_loss})
+
+        if val_epoch_loss <= self.best_epoch_loss:
+            print(
+                "\t" + f"{b_}Validation Loss Improved ({self.best_epoch_loss} ---> {val_epoch_loss})"
+            )
+            self.best_epoch_loss = val_epoch_loss
+            accelerator.wait_for_everyone()
+            unwrapped_model = accelerator.unwrap_model(model)
+            self.best_model_wts = copy.deepcopy(unwrapped_model.state_dict())
+            PATH = Path(config['weights_save']) / f"Loss-Fold-{fold}.bin"
+
+            accelerator.save(unwrapped_model.state_dict(), PATH)
+            # Save a model file from the current directory
+            print("\t" + f"Model Saved to: {PATH}{sr_}")
+
+
+
 
 def get_trainer(
     model,
@@ -33,54 +68,25 @@ def get_trainer(
     wandb.watch(model, log_freq=100)
 
     start = time.time()
-    best_model_wts = copy.deepcopy(model.state_dict())
-    best_epoch_loss = np.inf
-    history = defaultdict(list)
+    validator = Validator(model)
 
     for epoch in range(1, num_epochs + 1):
         gc.collect()
         train_epoch_loss = train_one_epoch(
             model=model,
-            dataloader=train_loader,
+            train_loader=train_loader,
+            valid_loader=valid_loader,
             optimizer=optimizer,
             scheduler=scheduler,
             criterion=criterion,
             accelerator=accelerator,
             epoch=epoch,
+            validator=validator,
+            fold=fold,
         )
 
-        val_epoch_loss = valid_one_epoch(
-            model=model,
-            dataloader=valid_loader,
-            criterion=criterion,
-            accelerator=accelerator,
-            epoch=epoch,
-        )
-
-        history["Train Loss"].append(train_epoch_loss)
-        history["Valid Loss"].append(val_epoch_loss)
-
-        # Log the metrics
+        validator.history["Train Loss"].append(train_epoch_loss)
         wandb.log({"train epoch loss": train_epoch_loss})
-        wandb.log({"valid epoch loss": val_epoch_loss})
-
-        # deep copy the model
-        if val_epoch_loss <= best_epoch_loss:
-            print(
-                f"{b_}Validation Loss Improved ({best_epoch_loss} ---> {val_epoch_loss})"
-            )
-            best_epoch_loss = val_epoch_loss
-            # run.summary["Best Loss"] = best_epoch_loss
-            best_model_wts = copy.deepcopy(model.state_dict())
-            PATH = Path(config['weights_save']) / f"Loss-Fold-{fold}"
-            # kaggle.api.dataset_initialize(Path(config['weights_save']))
-            # kaggle.api.dataset_create_new(Path(config['weights_save']), public=False, )
-            # torch.save(model.state_dict(), PATH)
-            accelerator.save_state(PATH)
-            # Save a model file from the current directory
-            print(f"Model Saved to: {PATH}{sr_}")
-
-        print()
 
     end = time.time()
     time_elapsed = end - start
@@ -91,9 +97,9 @@ def get_trainer(
             (time_elapsed % 3600) % 60,
         )
     )
-    print("Best Loss: {:.4f}".format(best_epoch_loss))
+    print("Best Loss: {:.4f}".format(validator.best_epoch_loss))
 
     # load best model weights
-    model.load_state_dict(best_model_wts)
+    model.load_state_dict(validator.best_model_wts)
 
-    return model, history
+    return model, validator.history

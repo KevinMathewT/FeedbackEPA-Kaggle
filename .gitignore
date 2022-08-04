@@ -166,3 +166,6 @@ setup/*.sh
 setup/kaggle.json
 wandb/
 .vscode/
+src/mlm/input/feedback-prize-2021/*
+src/mlm/input/feedback-prize-effectiveness/*
+src/mlm/input/*.zip

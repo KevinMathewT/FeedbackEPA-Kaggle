@@ -1,5 +1,5 @@
 ### paths
-# input: &IBASE D:\Kevin\Machine Learning\FeedbackPEA\input\ # local
+# input: &IBASE D:/Kevin/Machine Learning/FeedbackPEA/input/ # local
 # input: &IBASE /kaggle/input/feedback-prize-effectiveness/ # kaggle
 input: &IBASE /home/working/input/ # jarvis
 train_csv: !join [*IBASE, train.csv]
@@ -8,13 +8,13 @@ sample_csv: !join [*IBASE, sample_submission.csv]
 train_base: !join [*IBASE, train/]
 test_base: !join [*IBASE, test/]
 
-# generated: &GBASE D:\Kevin\Machine Learning\FeedbackPEA\generated\ # local
+# generated: &GBASE D:/Kevin/Machine Learning/FeedbackPEA/generated/ # local
 # generated: &GBASE /kaggle/working/generated/ # kaggle
 generated: &GBASE /home/working/generated/ # jarvis
 train_folds: !join [*GBASE, train_folds.csv]
 label_enc: !join [*GBASE, label_enc.pkl]
 
-# weights_save: &WBASE D:\Kevin\Machine Learning\FeedbackPEA\weights\ # local
+# weights_save: &WBASE D:/Kevin/Machine Learning/FeedbackPEA/weights/ # local
 # weights_save: &WBASE /kaggle/working/weights/ # kaggle
 weights_save: &WBASE /home/working/weights/ # jarvis
 
@@ -73,6 +73,16 @@ seed: 42
 
 ### logging
 freq: 5
+valid_freq_per_epoch: 3
 
 ### kaggle save config
 title: debv3-weigh-adamw-cos-sce-fp16-essay
+
+### mlm pretrain config
+mlm_src: &MLM D:/Kevin/Machine Learning/FeedbackPEA/src/mlm/
+mlm_gen: !join [*MLM, generated/]
+
+mlm_f1_train_csv: !join [*MLM, input/feedback-prize-2021/train.csv]
+mlm_f2_train_csv: !join [*MLM, input/feedback-prize-effectiveness/train.csv]
+mlm_f1_train_base: !join [*MLM, input/feedback-prize-2021/train/]
+mlm_f2_train_base: !join [*MLM, input/feedback-prize-2021/train/]
