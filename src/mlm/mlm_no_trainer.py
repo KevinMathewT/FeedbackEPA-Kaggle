@@ -108,13 +108,13 @@ def parse_args():
     parser.add_argument(
         "--per_device_train_batch_size",
         type=int,
-        default=8,
+        default=config['mlm_train_bs'],
         help="Batch size (per device) for the training dataloader.",
     )
     parser.add_argument(
         "--per_device_eval_batch_size",
         type=int,
-        default=8,
+        default=config['mlm_train_bs'],
         help="Batch size (per device) for the evaluation dataloader.",
     )
     parser.add_argument(
@@ -159,7 +159,7 @@ def parse_args():
     parser.add_argument(
         "--max_seq_length",
         type=int,
-        default=None,
+        default=config['max_length'],
         help=(
             "The maximum total input sequence length after tokenization. Sequences longer than this will be truncated."
         ),
