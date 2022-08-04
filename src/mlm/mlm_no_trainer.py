@@ -108,13 +108,13 @@ def parse_args():
     parser.add_argument(
         "--per_device_train_batch_size",
         type=int,
-        default=config['mlm_train_bs'],
+        default=config['mlm_bs'],
         help="Batch size (per device) for the training dataloader.",
     )
     parser.add_argument(
         "--per_device_eval_batch_size",
         type=int,
-        default=config['mlm_train_bs'],
+        default=config['mlm_bs'],
         help="Batch size (per device) for the evaluation dataloader.",
     )
     parser.add_argument(
