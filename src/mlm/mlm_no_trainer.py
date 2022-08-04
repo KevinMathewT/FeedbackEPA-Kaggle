@@ -66,10 +66,10 @@ def parse_args():
         help="The configuration name of the dataset to use (via the datasets library).",
     )
     parser.add_argument(
-        "--train_file", type=str, default=Path(config['mlm_gen']) / "train.csv", help="A csv or a json file containing the training data."
+        "--train_file", type=str, default=str(Path(config['mlm_gen']) / "train.csv"), help="A csv or a json file containing the training data."
     )
     parser.add_argument(
-        "--validation_file", type=str, default=Path(config['mlm_gen']) / "valid.csv", help="A csv or a json file containing the validation data."
+        "--validation_file", type=str, default=str(Path(config['mlm_gen']) / "valid.csv"), help="A csv or a json file containing the validation data."
     )
     parser.add_argument(
         "--validation_split_percentage",
