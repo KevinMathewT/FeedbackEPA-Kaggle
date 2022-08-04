@@ -102,7 +102,7 @@ def parse_args():
     parser.add_argument("--exp_num", type=str, required=True)
     parser.add_argument("--param_freeze", action="store_true", required=False)
     parser.add_argument("--num_train_epochs", type=int, default=5, required=False)
-    parser.add_argument("--batch_size", type=int, default=6, required=False)
+    parser.add_argument("--batch_size", type=int, default=config['mlm_train_bs'], required=False)
     parser.add_argument("--lr", type=float, default=2e-5, required=False)
     parser.add_argument(
         "--gradient_accumulation_steps", type=int, default=1, required=False
