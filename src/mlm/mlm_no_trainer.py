@@ -699,6 +699,8 @@ def main():
     if args.with_tracking:
         if accelerator.is_main_process:
             experiment_config = vars(args)
+            for k in config.keys():
+                experiment_config[k] = config[k]
             # TensorBoard cannot log Enums, need the raw value
             experiment_config["lr_scheduler_type"] = experiment_config[
                 "lr_scheduler_type"
