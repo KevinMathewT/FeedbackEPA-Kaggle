@@ -88,3 +88,5 @@ mlm_f1_train_csv: !join [*MLM, input/feedback-prize-2021/train.csv]
 mlm_f2_train_csv: !join [*MLM, input/feedback-prize-effectiveness/train.csv]
 mlm_f1_train_base: !join [*MLM, input/feedback-prize-2021/train/]
 mlm_f2_train_base: !join [*MLM, input/feedback-prize-2021/train/]
+
+mlm_test_split: 0.1

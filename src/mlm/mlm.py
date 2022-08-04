@@ -60,18 +60,18 @@ print(f"tokenizers.__version__: {tokenizers.__version__}")
 print(f"transformers.__version__: {transformers.__version__}")
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-
 def get_patient_notes_not_used_train():
     essay_fps = glob(config["mlm_f1_train_base"] + "*.txt") + glob(
         config["mlm_f2_train_base"] + "*.txt"
     )
-    print(f"Essay count: {len(essay_fps)}")
+    print(f"essay count: {len(essay_fps)}")
 
     essays = []
     for fp in tqdm(essay_fps):
         essays.append(resolve_encodings_and_normalize(open(Path(fp), "r").read()))
     
-    essays = np.array(essays)
+    essays = np.random.shuffle(np.array(essays)).tolist()
+    return essays[:-len(essays) * config['mlm_test_split']], essays[-len(essays) * config['mlm_test_split']:]
 
 
 def tokenize_function(examples):
@@ -108,6 +108,8 @@ if __name__ == "__main__":
 
     args = parse_args()
     train_text_list, valid_text_list = get_patient_notes_not_used_train()
+    print(f"train text list lenght: {len(train_text_list)}")
+    print(f"valid text list lenght: {len(valid_text_list)}")
 
     if args.debug:
         train_text_list = train_text_list[:10]
