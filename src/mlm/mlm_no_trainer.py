@@ -251,7 +251,7 @@ def parse_args():
     parser.add_argument(
         "--resume_from_checkpoint",
         type=str,
-        default=None,
+        default="/home/working/weights/epoch_1/",
         help="If the training should continue from a checkpoint folder.",
     )
     parser.add_argument(
