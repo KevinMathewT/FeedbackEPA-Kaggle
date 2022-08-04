@@ -79,7 +79,9 @@ valid_freq_per_epoch: 3
 title: debv3-weigh-adamw-cos-sce-fp16-essay
 
 ### mlm pretrain config
-mlm_src: &MLM D:/Kevin/Machine Learning/FeedbackPEA/src/mlm/
+# mlm_src: &MLM D:/Kevin/Machine Learning/FeedbackPEA/src/mlm/ # local
+# mlm_src: &MLM /kaggle/working/src/mlm/ # kaggle
+mlm_src: &MLM /home/working/src/mlm/ # jarvis
 mlm_gen: !join [*MLM, generated/]
 
 mlm_f1_train_csv: !join [*MLM, input/feedback-prize-2021/train.csv]

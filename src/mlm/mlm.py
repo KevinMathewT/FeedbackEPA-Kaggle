@@ -23,7 +23,9 @@ from transformers import TrainingArguments
 from transformers.utils import logging
 
 from config import config
+from src.utils import seed_everything
 
+seed_everything(42)
 logging.set_verbosity_info()
 logger = logging.get_logger(__name__)
 logger.info("INFO")
