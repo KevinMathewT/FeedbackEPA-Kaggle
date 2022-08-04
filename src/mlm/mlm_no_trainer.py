@@ -408,6 +408,7 @@ def main():
         logger.info("Training new model from scratch")
         model = AutoModelForMaskedLM.from_config(config)
 
+    model.gradient_checkpointing_enable()
     model.resize_token_embeddings(len(tokenizer))
 
     # Preprocessing the datasets.
