@@ -91,3 +91,4 @@ mlm_f2_train_base: !join [*MLM, input/feedback-prize-2021/train/]
 
 mlm_test_split: 0.1
 mlm_bs: 8
+mlm_debug: true # [true, false]

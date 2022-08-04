@@ -202,6 +202,7 @@ def parse_args():
     parser.add_argument(
         "--with_tracking",
         action="store_true",
+        default=True,
         help="Whether to enable experiment trackers for logging.",
     )
     parser.add_argument(
@@ -262,6 +263,8 @@ def create_data():
     essay_fps = glob(config["mlm_f1_train_base"] + "*.txt") + glob(
         config["mlm_f2_train_base"] + "*.txt"
     )
+    if config['mlm_debug']:
+        essay_fps = essay_fps[:100]
     print(f"essay count: {len(essay_fps)}")
 
     essays = []
@@ -673,7 +676,7 @@ def main():
                 outputs = model(**batch)
 
             loss = outputs.loss
-            losses.append(accelerator.gather_for_metrics(loss.repeat(args.per_device_eval_batch_size)))
+            losses.append(accelerator.gather(loss.repeat(args.per_device_eval_batch_size)))
 
         losses = torch.cat(losses)
         try:
