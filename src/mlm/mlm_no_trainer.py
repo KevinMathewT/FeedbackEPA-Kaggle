@@ -276,8 +276,8 @@ def create_data():
     train = pd.DataFrame({"text": train_essays})
     valid = pd.DataFrame({"text": valid_essays})
 
-    train.to_csv(Path(config['mlm_gen']) / "train.csv")
-    valid.to_csv(Path(config['mlm_gen']) / "valid.csv")
+    train.to_csv(Path(config['mlm_gen']) / "train.csv", index=False)
+    valid.to_csv(Path(config['mlm_gen']) / "valid.csv", index=False)
 
 
 def main():
