@@ -71,7 +71,8 @@ def get_patient_notes_not_used_train():
     for fp in tqdm(essay_fps):
         essays.append(resolve_encodings_and_normalize(open(Path(fp), "r").read()))
 
-    np.random.shuffle(np.array(essays))
+    essays = np.array(essays)
+    np.random.shuffle(essays)
     essays = essays.tolist()
     return (
         essays[: -int(len(essays) * config["mlm_test_split"])],
