@@ -325,7 +325,7 @@ def create_data():
         config["mlm_f2_train_base"] + "*.txt"
     )
     if config["mlm_debug"]:
-        essay_fps = essay_fps[:100]
+        essay_fps = essay_fps[:25]
     print(f"essay count: {len(essay_fps)}")
 
     essays = []
@@ -829,7 +829,7 @@ def main():
             accelerator.wait_for_everyone()
             unwrapped_model = accelerator.unwrap_model(model)
             unwrapped_model.save_pretrained(
-                args.output_dir,
+                Path(args.output_dir) / f"epoch_{epoch}/",
                 is_main_process=accelerator.is_main_process,
                 save_function=accelerator.save,
             )
