@@ -201,7 +201,7 @@ if __name__ == "__main__":
         save_steps = 100000000
 
     training_args = TrainingArguments(
-        model_path="output-mlm",
+        model_path=config['weights_save'],
         evaluation_strategy="epoch",
         learning_rate=args.lr,
         weight_decay=0.01,
