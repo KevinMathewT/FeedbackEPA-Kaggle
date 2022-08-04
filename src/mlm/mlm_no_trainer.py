@@ -851,16 +851,16 @@ def main():
             accelerator.wait_for_everyone()
             unwrapped_model = accelerator.unwrap_model(model)
             unwrapped_model.save_pretrained(
-                args.output_dir,
+                Path(args.output_dir) / f"epoch_{epoch}/",
                 is_main_process=accelerator.is_main_process,
                 save_function=accelerator.save,
             )
             if accelerator.is_main_process:
-                tokenizer.save_pretrained(args.output_dir)
+                tokenizer.save_pretrained(Path(args.output_dir) / f"epoch_{epoch}/")
                 if args.push_to_hub:
                     repo.push_to_hub(commit_message="End of training", auto_lfs_prune=True)
 
-            with open(os.path.join(args.output_dir, "all_results.json"), "w") as f:
+            with open(os.path.join(Path(args.output_dir) / f"epoch_{epoch}/", "all_results.json"), "w") as f:
                 json.dump({"perplexity": perplexity}, f)
 
 
