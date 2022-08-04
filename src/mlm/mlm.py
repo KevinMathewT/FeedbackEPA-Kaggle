@@ -68,7 +68,7 @@ def get_patient_notes_not_used_train():
     print(f"Essay count: {len(essay_fps)}")
 
     essays = []
-    for fp in essay_fps:
+    for fp in tqdm(essay_fps):
         essays.append(resolve_encodings_and_normalize(open(Path(fp), "r").read()))
     
     essays = np.array(essays)
