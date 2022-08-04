@@ -60,6 +60,7 @@ print(f"tokenizers.__version__: {tokenizers.__version__}")
 print(f"transformers.__version__: {transformers.__version__}")
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
+
 def get_patient_notes_not_used_train():
     essay_fps = glob(config["mlm_f1_train_base"] + "*.txt") + glob(
         config["mlm_f2_train_base"] + "*.txt"
@@ -69,9 +70,13 @@ def get_patient_notes_not_used_train():
     essays = []
     for fp in tqdm(essay_fps):
         essays.append(resolve_encodings_and_normalize(open(Path(fp), "r").read()))
-    
-    essays = np.random.shuffle(np.array(essays)).tolist()
-    return essays[:-len(essays) * config['mlm_test_split']], essays[-len(essays) * config['mlm_test_split']:]
+
+    np.random.shuffle(np.array(essays))
+    essays = essays.tolist()
+    return (
+        essays[: -int(len(essays) * config["mlm_test_split"])],
+        essays[-int(len(essays) * config["mlm_test_split"]) :],
+    )
 
 
 def tokenize_function(examples):
@@ -125,8 +130,8 @@ if __name__ == "__main__":
                 text_list.append(text)
         return text_list
 
-    mlm_train_json_path = config['mlm_gen'] / "train_mlm.json"
-    mlm_valid_json_path = config['mlm_gen'] / "valid_mlm.json"
+    mlm_train_json_path = config["mlm_gen"] / "train_mlm.json"
+    mlm_valid_json_path = config["mlm_gen"] / "valid_mlm.json"
 
     for json_path, list_ in zip(
         [mlm_train_json_path, mlm_valid_json_path], [train_text_list, valid_text_list]
@@ -233,4 +238,6 @@ if __name__ == "__main__":
         model_name = "deberta-v3-large"
     elif args.model_name == "microsoft/deberta-v2-xlarge":
         model_name = "deberta-v2-xlarge"
-    trainer.model.save_pretrained(config['mlm_gen'] / f"{args.exp_num}_mlm_{model_name}")
+    trainer.model.save_pretrained(
+        config["mlm_gen"] / f"{args.exp_num}_mlm_{model_name}"
+    )
