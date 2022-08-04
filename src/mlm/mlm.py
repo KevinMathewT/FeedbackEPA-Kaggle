@@ -91,7 +91,7 @@ def get_tokenizer(args):
 
 def parse_args():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--model_name", type=str, default="", required=False)
+    parser.add_argument("--model_name", type=str, default=config['model_name'], required=False)
     parser.add_argument(
         "--model_path",
         type=str,
