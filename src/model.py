@@ -1,3 +1,4 @@
+import gc
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
@@ -243,8 +244,19 @@ class FeedBackModel(nn.Module):
         self.model = AutoModel.from_pretrained(model_name, config=self.config)
         if config['use_pretrained']:
             print(f"using pretrained weights from {config['pretrained_model_weights']}")
-            print(torch.load(config['pretrained_model_weights']))
-            self.model.load_state_dict(torch.load(config['pretrained_model_weights'])['deberta'])
+            orig_saved_weights = torch.load(config['pretrained_model_weights'])
+            pretrained_weights = {}
+            prefix = 'deberta.'
+            for k in orig_saved_weights:
+                if k.startsWith(prefix):
+                    pretrained_weights[k[len(prefix):]] = orig_saved_weights[k]
+                else:
+                    pretrained_weights[k] = orig_saved_weights[k]
+            del orig_saved_weights
+            _ = gc.collect()
+
+            # Loading weights
+            self.model.load_state_dict(pretrained_weights)
         self.model.gradient_checkpointing_enable()
 
         self.pooler = models_dict[config["pooler"]](model_config=self.config)
