@@ -10,18 +10,18 @@ from config import config
 
 
 def train_one_epoch(
-    model, train_dataloader, valid_loader, optimizer, scheduler, criterion, accelerator, epoch, validator, fold
+    model, train_loader, valid_loader, optimizer, scheduler, criterion, accelerator, epoch, validator, fold
 ):
     model.train()
 
-    valid_after_batches = len(train_dataloader) / validator.valid_freq_per_epoch
+    valid_after_batches = len(train_loader) / validator.valid_freq_per_epoch
     dataset_size = 0
     running_loss = 0.0
     running_ce_loss = 0.0
     st = time()
 
-    # bar = tqdm(enumerate(train_dataloader), total=len(train_dataloader))
-    for step, data in enumerate(train_dataloader):  # bar:
+    # bar = tqdm(enumerate(train_loader), total=len(train_loader))
+    for step, data in enumerate(train_loader):  # bar:
         ids = data["input_ids"]
         mask = data["attention_mask"]
         targets = data["target"]
@@ -55,9 +55,9 @@ def train_one_epoch(
         epoch_loss = running_loss / dataset_size
         epoch_ce_loss = running_ce_loss / dataset_size
 
-        if step == 0 or (step + 1) % config["freq"] == 0 or step == len(train_dataloader) - 1:
+        if step == 0 or (step + 1) % config["freq"] == 0 or step == len(train_loader) - 1:
             accelerator.print(
-                f"[{epoch}/{config['epochs']}][{str(step + 1):5s}/{len(train_dataloader)}] train loss: {epoch_loss:1.10f} | ce_loss: {epoch_ce_loss:1.10f} | lr: {optimizer.param_groups[0]['lr']:1.10f} | grad norm: {grad_norm:1.4f} | time: {time() - st:1.1f}s"
+                f"[{epoch}/{config['epochs']}][{str(step + 1):5s}/{len(train_loader)}] train loss: {epoch_loss:1.10f} | ce_loss: {epoch_ce_loss:1.10f} | lr: {optimizer.param_groups[0]['lr']:1.10f} | grad norm: {grad_norm:1.4f} | time: {time() - st:1.1f}s"
             )
 
         if (step + 1) % valid_after_batches < 1:
