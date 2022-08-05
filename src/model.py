@@ -253,7 +253,7 @@ class FeedBackModel(nn.Module):
                     pretrained_weights[k[len(prefix):]] = orig_saved_weights[k]
                 elif k.startswith(classifier):
                     continue
-                elif k == "embeddings.word_embeddings.weight":
+                elif k.equals("embeddings.word_embeddings.weight"):
                     continue
                 else:
                     pretrained_weights[k] = orig_saved_weights[k]
