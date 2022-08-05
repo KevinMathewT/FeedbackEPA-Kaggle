@@ -247,9 +247,14 @@ class FeedBackModel(nn.Module):
             orig_saved_weights = torch.load(config['pretrained_model_weights'])
             pretrained_weights = {}
             prefix = 'deberta.'
+            classifier = 'cls.'
             for k in orig_saved_weights:
                 if k.startswith(prefix):
                     pretrained_weights[k[len(prefix):]] = orig_saved_weights[k]
+                if k.startswith(classifier):
+                    continue
+                if k == "embeddings.word_embeddings.weight":
+                    continue
                 else:
                     pretrained_weights[k] = orig_saved_weights[k]
             del orig_saved_weights
