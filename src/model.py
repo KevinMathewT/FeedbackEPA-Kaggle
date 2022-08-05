@@ -215,7 +215,7 @@ class DefaultPooling(nn.Module):
 
     def forward(self, model_out, attention_mask):
         pooler_output = model_out.last_hidden_state[:, 0, :]
-        
+
         if not config["multi_drop"]:
             outputs = self.regressor(pooler_output)
         if config["multi_drop"]:
@@ -242,25 +242,24 @@ class FeedBackModel(nn.Module):
         self.config.update({"output_hidden_states": True})
 
         self.model = AutoModel.from_pretrained(model_name, config=self.config)
-        if config['use_pretrained']:
+        if config["use_pretrained"]:
             print(f"using pretrained weights from {config['pretrained_model_weights']}")
-            orig_saved_weights = torch.load(config['pretrained_model_weights'])
+            orig_saved_weights = torch.load(config["pretrained_model_weights"])
             pretrained_weights = {}
-            prefix = 'deberta.'
-            classifier = 'cls.'
+            prefix = "deberta."
+            classifier = "cls."
             for k in orig_saved_weights:
                 if k.startswith(prefix):
-                    pretrained_weights[k[len(prefix):]] = orig_saved_weights[k]
+                    pretrained_weights[k[len(prefix) :]] = orig_saved_weights[k]
                 elif k.startswith(classifier):
-                    continue
-                elif k.startswith("embeddings.word_embeddings.weight"):
                     continue
                 else:
                     pretrained_weights[k] = orig_saved_weights[k]
-            
+
             print(f"orig weight keys: {orig_saved_weights.keys()}")
             print(f" new weight keys: {pretrained_weights.keys()}")
             del orig_saved_weights
+            del pretrained_weights["embeddings.word_embeddings.weight"]
             _ = gc.collect()
 
             # Loading weights
