@@ -5,7 +5,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 from torch.utils.checkpoint import checkpoint
-from transformers import AutoModel, AutoConfig
+from transformers import AutoModel, AutoConfig, AutoTokenizer
 
 from config import config
 
@@ -240,10 +240,14 @@ models_dict = {
 class FeedBackModel(nn.Module):
     def __init__(self, model_name):
         super(FeedBackModel, self).__init__()
+        tokenizer = AutoTokenizer.from_pretrained(config["tokenizer_path"], use_fast=True)
+
         self.config = AutoConfig.from_pretrained(model_name)
         self.config.update({"output_hidden_states": True})
 
         self.model = AutoModel.from_pretrained(model_name, config=self.config)
+        self.model.resize_token_embeddings(len(tokenizer))
+
         if config["use_pretrained"]:
             print(f"using pretrained weights from {config['pretrained_model_weights']}")
             orig_saved_weights = torch.load(config["pretrained_model_weights"])
@@ -262,9 +266,8 @@ class FeedBackModel(nn.Module):
             pprint(orig_saved_weights.keys())
             print(f" new weight keys:")
             pprint(pretrained_weights.keys())
-            
+
             del orig_saved_weights
-            del pretrained_weights["embeddings.word_embeddings.weight"]
             _ = gc.collect()
 
             # Loading weights
