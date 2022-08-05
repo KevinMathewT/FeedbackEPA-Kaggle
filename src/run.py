@@ -47,6 +47,7 @@ def run(index):
         )
 
         if config['use_pretrained']:
+            print(f"using pretrained weights from {config['pretrained_model_weights']}")
             model.load_state_dict(config['pretrained_model_weights'])
 
         model, history = get_trainer(
