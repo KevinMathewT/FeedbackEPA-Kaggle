@@ -30,6 +30,8 @@ fold_type: "stratified_group" # ["stratified", "group", "stratified_group"]
 tr_folds: [0, 1, 2, 3, 4]
 
 ### model params
+use_pretrained: True
+pretrained_model_weights: !join [*IBASE, mlm/epoch_2/pytorch_model.bin]
 num_classes: 3
 output_hidden_states: false # [true, false]
 pooler: "weighted" # [max, mean, mean_max, conv1d, attention, default, weighted]

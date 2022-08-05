@@ -46,6 +46,9 @@ def run(index):
             model, train_loader, valid_loader, optimizer, scheduler
         )
 
+        if config['use_pretrained']:
+            model.load_state_dict(config['pretrained_model_weights'])
+
         model, history = get_trainer(
             model=model,
             train_loader=train_loader,
