@@ -7,11 +7,10 @@ import torch
 import torch.nn as nn
 
 from config import config
-from src.trainer import Validator
 
 
 def train_one_epoch(
-    model, train_dataloader, valid_loader, optimizer, scheduler, criterion, accelerator, epoch, validator: Validator, fold
+    model, train_dataloader, valid_loader, optimizer, scheduler, criterion, accelerator, epoch, validator, fold
 ):
     model.train()
 
