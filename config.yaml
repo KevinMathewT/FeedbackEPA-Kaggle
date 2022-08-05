@@ -27,7 +27,7 @@ tokenizer_path: *MODEL
 ### kfold cv
 folds: 5
 fold_type: "stratified_group" # ["stratified", "group", "stratified_group"]
-tr_folds: [0]
+tr_folds: [0, 1, 2, 3, 4]
 
 ### model params
 use_pretrained: True
