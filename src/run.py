@@ -46,10 +46,6 @@ def run(index):
             model, train_loader, valid_loader, optimizer, scheduler
         )
 
-        if config['use_pretrained']:
-            print(f"using pretrained weights from {config['pretrained_model_weights']}")
-            model.load_state_dict(torch.load(config['pretrained_model_weights']))
-
         model, history = get_trainer(
             model=model,
             train_loader=train_loader,

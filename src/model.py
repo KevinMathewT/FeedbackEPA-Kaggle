@@ -239,8 +239,13 @@ class FeedBackModel(nn.Module):
         super(FeedBackModel, self).__init__()
         self.config = AutoConfig.from_pretrained(model_name)
         self.config.update({"output_hidden_states": True})
+
         self.model = AutoModel.from_pretrained(model_name, config=self.config)
+        if config['use_pretrained']:
+            print(f"using pretrained weights from {config['pretrained_model_weights']}")
+            self.model.load_state_dict(torch.load(config['pretrained_model_weights']))
         self.model.gradient_checkpointing_enable()
+        
         self.pooler = models_dict[config["pooler"]](model_config=self.config)
         self.pooler.apply(self._init_weights)
 
