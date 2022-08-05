@@ -56,6 +56,8 @@ class Validator:
 
             del unwrapped_model
             _ = gc.collect()
+        
+        
 
 
 def get_trainer(

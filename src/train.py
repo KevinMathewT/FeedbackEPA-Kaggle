@@ -60,9 +60,12 @@ def train_one_epoch(
                 f"[{epoch}/{config['epochs']}][{str(step + 1):5s}/{len(train_loader)}] train loss: {epoch_loss:1.10f} | ce_loss: {epoch_ce_loss:1.10f} | lr: {optimizer.param_groups[0]['lr']:1.10f} | grad norm: {grad_norm:1.4f} | time: {time() - st:1.1f}s"
             )
 
-        if (step + 1) % valid_after_batches < 1:
+        if True or (step + 1) % valid_after_batches < 1:
             index = round((step + 1) / valid_after_batches)
-            validator.validate(model=model, valid_loader=valid_loader, criterion=criterion, accelerator=accelerator, epoch=epoch, index=index, fold=fold )
+            validator.validate(model=model, valid_loader=valid_loader, criterion=criterion, accelerator=accelerator, epoch=epoch, index=index, fold=fold)
+            model.train()
+
+        break
 
     gc.collect()
 
@@ -103,6 +106,8 @@ def valid_one_epoch(model, valid_loader, criterion, accelerator, epoch):
             accelerator.print(
                 "\t" + f"[{epoch}/{config['epochs']}][{str(step + 1):5s}/{len(valid_loader)}] valid loss: {epoch_loss:1.10f} | ce_loss: {epoch_ce_loss:1.10f} | time: {time() - st:1.1f}s"
             )
+        
+        break
 
     gc.collect()
 
