@@ -65,8 +65,6 @@ def train_one_epoch(
             validator.validate(model=model, valid_loader=valid_loader, criterion=criterion, accelerator=accelerator, epoch=epoch, index=index, fold=fold)
             model.train()
 
-        break
-
     gc.collect()
 
     return epoch_loss
