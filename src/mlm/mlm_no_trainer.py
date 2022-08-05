@@ -141,7 +141,7 @@ def parse_args():
         help="Initial learning rate (after the potential warmup period) to use.",
     )
     parser.add_argument(
-        "--weight_decay", type=float, default=0.0, help="Weight decay to use."
+        "--weight_decay", type=float, default=config['wd'], help="Weight decay to use."
     )
     parser.add_argument(
         "--num_train_epochs",
@@ -164,7 +164,7 @@ def parse_args():
     parser.add_argument(
         "--lr_scheduler_type",
         type=SchedulerType,
-        default="linear",
+        default="cosine",
         help="The scheduler type to use.",
         choices=[
             "linear",
@@ -178,7 +178,7 @@ def parse_args():
     parser.add_argument(
         "--num_warmup_steps",
         type=int,
-        default=0,
+        default=config['warmup_steps'],
         help="Number of steps for the warmup in the lr scheduler.",
     )
     parser.add_argument(
@@ -208,7 +208,7 @@ def parse_args():
     parser.add_argument(
         "--line_by_line",
         type=bool,
-        default=False,
+        default=config['mlm_dataset_line_by_line'],
         help="Whether distinct lines of text in the dataset are to be handled as distinct sequences.",
     )
     parser.add_argument(

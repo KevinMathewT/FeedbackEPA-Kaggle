@@ -27,7 +27,7 @@ tokenizer_path: *MODEL
 ### kfold cv
 folds: 5
 fold_type: "stratified_group" # ["stratified", "group", "stratified_group"]
-tr_folds: [0, 1, 2, 3, 4]
+tr_folds: [0]
 
 ### model params
 use_pretrained: True
@@ -91,6 +91,7 @@ mlm_f2_train_csv: !join [*MLM, input/feedback-prize-effectiveness/train.csv]
 mlm_f1_train_base: !join [*MLM, input/feedback-prize-2021/train/]
 mlm_f2_train_base: !join [*MLM, input/feedback-prize-2021/train/]
 
+mlm_dataset_line_by_line: true # [true, false]
 mlm_test_split: 0.1
 mlm_bs: 8
 mlm_debug: false # [true, false]
