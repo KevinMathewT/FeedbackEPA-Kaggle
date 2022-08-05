@@ -243,7 +243,7 @@ class FeedBackModel(nn.Module):
         self.model = AutoModel.from_pretrained(model_name, config=self.config)
         if config['use_pretrained']:
             print(f"using pretrained weights from {config['pretrained_model_weights']}")
-            self.model.load_state_dict(torch.load(config['pretrained_model_weights']).deberta)
+            self.model.load_state_dict(torch.load(config['pretrained_model_weights'])['deberta'])
         self.model.gradient_checkpointing_enable()
 
         self.pooler = models_dict[config["pooler"]](model_config=self.config)
