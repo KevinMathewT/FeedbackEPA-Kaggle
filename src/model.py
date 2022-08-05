@@ -262,16 +262,12 @@ class FeedBackModel(nn.Module):
                 else:
                     pretrained_weights[k] = orig_saved_weights[k]
 
-            print(f"orig weight keys:")
-            pprint(orig_saved_weights.keys())
-            print(f" new weight keys:")
-            pprint(pretrained_weights.keys())
-
-            del orig_saved_weights
-            _ = gc.collect()
-
             # Loading weights
             self.model.load_state_dict(pretrained_weights)
+            
+            del orig_saved_weights
+            del pretrained_weights
+            _ = gc.collect()
         self.model.gradient_checkpointing_enable()
 
         self.pooler = models_dict[config["pooler"]](model_config=self.config)

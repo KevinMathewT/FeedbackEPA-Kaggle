@@ -17,15 +17,18 @@ from config import config
 b_ = Fore.BLUE
 sr_ = Style.RESET_ALL
 
-class Validator():
+
+class Validator:
     def __init__(self, model):
-        self.valid_freq_per_epoch = config['valid_freq_per_epoch']
+        self.valid_freq_per_epoch = config["valid_freq_per_epoch"]
         self.best_epoch_loss = np.inf
         self.best_model_wts = copy.deepcopy(model.state_dict())
         self.history = defaultdict(list)
 
     def validate(self, model, valid_loader, criterion, accelerator, epoch, index, fold):
-        print("\t" + ("*" * 5) + f" validation: epoch {epoch}, index {index} " + ("*" * 5))        
+        print(
+            "\t" + ("*" * 5) + f" validation: epoch {epoch}, index {index} " + ("*" * 5)
+        )
         val_epoch_loss = valid_one_epoch(
             model=model,
             valid_loader=valid_loader,
@@ -38,19 +41,21 @@ class Validator():
 
         if val_epoch_loss <= self.best_epoch_loss:
             print(
-                "\t" + f"{b_}Validation Loss Improved ({self.best_epoch_loss} ---> {val_epoch_loss})"
+                "\t"
+                + f"{b_}Validation Loss Improved ({self.best_epoch_loss} ---> {val_epoch_loss})"
             )
             self.best_epoch_loss = val_epoch_loss
             accelerator.wait_for_everyone()
             unwrapped_model = accelerator.unwrap_model(model)
             self.best_model_wts = copy.deepcopy(unwrapped_model.state_dict())
-            PATH = Path(config['weights_save']) / f"Loss-Fold-{fold}.bin"
+            PATH = Path(config["weights_save"]) / f"Loss-Fold-{fold}.bin"
 
             accelerator.save(unwrapped_model.state_dict(), PATH)
             # Save a model file from the current directory
             print("\t" + f"Model Saved to: {PATH}{sr_}")
 
-
+            del unwrapped_model
+            _ = gc.collect()
 
 
 def get_trainer(
