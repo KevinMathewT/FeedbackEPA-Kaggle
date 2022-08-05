@@ -248,7 +248,7 @@ class FeedBackModel(nn.Module):
             pretrained_weights = {}
             prefix = 'deberta.'
             for k in orig_saved_weights:
-                if k.startsWith(prefix):
+                if k.startswith(prefix):
                     pretrained_weights[k[len(prefix):]] = orig_saved_weights[k]
                 else:
                     pretrained_weights[k] = orig_saved_weights[k]
