@@ -28,7 +28,7 @@ class Validator():
         print("\t" + ("*" * 5) + f" validation: epoch {epoch}, index {index} " + ("*" * 5))        
         val_epoch_loss = valid_one_epoch(
             model=model,
-            dataloader=valid_loader,
+            valid_loader=valid_loader,
             criterion=criterion,
             accelerator=accelerator,
             epoch=epoch,

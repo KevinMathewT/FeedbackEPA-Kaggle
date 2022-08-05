@@ -70,7 +70,7 @@ def train_one_epoch(
 
 
 @torch.no_grad()
-def valid_one_epoch(model, valid_dataloader, criterion, accelerator, epoch):
+def valid_one_epoch(model, valid_loader, criterion, accelerator, epoch):
     model.eval()
 
     dataset_size = 0
@@ -78,8 +78,8 @@ def valid_one_epoch(model, valid_dataloader, criterion, accelerator, epoch):
     running_ce_loss = 0.0
     st = time()
 
-    # bar = tqdm(enumerate(valid_dataloader), total=len(valid_dataloader))
-    for step, data in enumerate(valid_dataloader):  # bar:
+    # bar = tqdm(enumerate(valid_loader), total=len(valid_loader))
+    for step, data in enumerate(valid_loader):  # bar:
         ids = data["input_ids"]
         mask = data["attention_mask"]
         targets = data["target"]
@@ -99,9 +99,9 @@ def valid_one_epoch(model, valid_dataloader, criterion, accelerator, epoch):
         epoch_loss = running_loss / dataset_size
         epoch_ce_loss = running_ce_loss / dataset_size
 
-        if step == 0 or (step + 1) % config["freq"] == 0 or step == len(valid_dataloader) - 1:
+        if step == 0 or (step + 1) % config["freq"] == 0 or step == len(valid_loader) - 1:
             accelerator.print(
-                "\t" + f"[{epoch}/{config['epochs']}][{str(step + 1):5s}/{len(valid_dataloader)}] valid loss: {epoch_loss:1.10f} | ce_loss: {epoch_ce_loss:1.10f} | time: {time() - st:1.1f}s"
+                "\t" + f"[{epoch}/{config['epochs']}][{str(step + 1):5s}/{len(valid_loader)}] valid loss: {epoch_loss:1.10f} | ce_loss: {epoch_ce_loss:1.10f} | time: {time() - st:1.1f}s"
             )
 
     gc.collect()
