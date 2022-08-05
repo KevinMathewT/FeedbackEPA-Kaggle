@@ -1,4 +1,6 @@
 import gc
+from pprint import pprint
+
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
@@ -256,8 +258,11 @@ class FeedBackModel(nn.Module):
                 else:
                     pretrained_weights[k] = orig_saved_weights[k]
 
-            print(f"orig weight keys: {orig_saved_weights.keys()}")
-            print(f" new weight keys: {pretrained_weights.keys()}")
+            print(f"orig weight keys:")
+            pprint(orig_saved_weights.keys())
+            print(f" new weight keys:")
+            pprint(pretrained_weights.keys())
+            
             del orig_saved_weights
             del pretrained_weights["embeddings.word_embeddings.weight"]
             _ = gc.collect()
