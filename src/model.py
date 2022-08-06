@@ -185,6 +185,8 @@ class WeightedLayerPooling(nn.Module):
             )
         )
         self.regressor = nn.Sequential(nn.Linear(768, 3))
+        if config["multi_drop"]:
+            self.md = MultiDropout(model_config=model_config)
 
     def forward(self, model_out, attention_mask):
         all_hidden_states = torch.stack(model_out.hidden_states)
