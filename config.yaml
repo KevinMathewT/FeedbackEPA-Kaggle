@@ -34,7 +34,7 @@ use_pretrained: False
 pretrained_model_weights: !join [*IBASE, mlm/epoch_2/pytorch_model.bin]
 num_classes: 3
 output_hidden_states: false # [true, false]
-pooler: "mean" # [max, mean, mean_max, conv1d, attention, default, weighted]
+pooler: "weighted" # [max, mean, mean_max, conv1d, attention, default, weighted]
 multi_drop: true # [true, false]
 
 ### train params
@@ -55,7 +55,7 @@ b2: 0.999
 max_grad_norm: 1000
 
 ### scheduler
-scheduler: cosine # ['linear', 'cosine', 'cosine_with_restarts', 'polynomial', 'constant', 'constant_with_warmup', CosineAnnealingLR, CosineAnnealingWarmRestarts, None]
+scheduler: linear # ['linear', 'cosine', 'cosine_with_restarts', 'polynomial', 'constant', 'constant_with_warmup', CosineAnnealingLR, CosineAnnealingWarmRestarts, None]
 warmup_steps: 200
 cycles: 0.5
 T_max: 500
