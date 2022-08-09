@@ -34,15 +34,15 @@ use_pretrained: False
 pretrained_model_weights: !join [*IBASE, mlm/epoch_2/pytorch_model.bin]
 num_classes: 3
 output_hidden_states: false # [true, false]
-pooler: "weighted" # [max, mean, mean_max, conv1d, attention, default, weighted]
+pooler: "mean" # [max, mean, mean_max, conv1d, attention, default, weighted]
 multi_drop: true # [true, false]
 
 ### train params
 epochs: 3
 n_accumulate: 1
 max_length: 512
-train_bs: 32
-valid_bs: 32
+train_bs: 64
+valid_bs: 64
 
 ### optimizer
 optimizer: "adamw" # [adamw, lamb, radam]

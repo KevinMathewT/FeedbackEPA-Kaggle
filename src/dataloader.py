@@ -76,7 +76,7 @@ class Collate:
         return output
 
 
-def get_loaders(fold):
+def get_loaders(fold, accelerator):
     tokenizer = AutoTokenizer.from_pretrained(config["tokenizer_path"], use_fast=True)
     # collate_fn = DataCollatorWithPadding(tokenizer=tokenizer)
 

@@ -37,7 +37,7 @@ def run(index):
 
         # Create dataloaders, model, optimizer, scheduler, criterion etc
         model = get_model()
-        train_loader, valid_loader = get_loaders(fold=fold)
+        train_loader, valid_loader = get_loaders(fold=fold, accelerator=accelerator)
         optimizer = get_optimizer(model)
         scheduler = get_scheduler(optimizer, num_training_steps=(len(train_loader) * config['epochs']))
         criterion = get_criterion()
