@@ -78,7 +78,7 @@ freq: 5
 valid_freq_per_epoch: 3
 
 ### kaggle save config
-title: exp-no-7
+title: exp-no-8
 
 ### mlm pretrain config
 # mlm_src: &MLM D:/Kevin/Machine Learning/FeedbackPEA/src/mlm/ # local
