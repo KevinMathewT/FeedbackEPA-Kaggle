@@ -95,14 +95,6 @@ def get_loaders(fold, accelerator):
         df_valid, tokenizer=tokenizer, max_length=config["max_length"]
     )
 
-    print()
-    print("example train loader input: ")
-    pprint(train_dataset[0])
-    print()
-    print("example valid loader input: ")
-    pprint(train_dataset[0])
-    print()
-
     collate_fn = Collate(tokenizer)
 
     train_loader = DataLoader(
