@@ -1,11 +1,13 @@
-import pandas as pd
+from pprint import pprint
 
-from config import config
+import pandas as pd
 
 import torch
 from torch.utils.data import Dataset, DataLoader
 
 from transformers import AutoTokenizer, DataCollatorWithPadding, PreTrainedTokenizer
+
+from config import config
 
 
 class FeedBackDataset(Dataset):
@@ -92,6 +94,14 @@ def get_loaders(fold, accelerator):
     valid_dataset = FeedBackDataset(
         df_valid, tokenizer=tokenizer, max_length=config["max_length"]
     )
+
+    print()
+    print("example train loader input: ")
+    pprint(train_dataset[0])
+    print()
+    print("example valid loader input: ")
+    pprint(train_dataset[0])
+    print()
 
     collate_fn = Collate(tokenizer)
 
