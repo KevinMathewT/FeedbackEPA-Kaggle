@@ -30,7 +30,7 @@ fold_type: "stratified_group" # ["stratified", "group", "stratified_group"]
 tr_folds: [0]
 
 ### model params
-use_pretrained: False
+use_pretrained: false # [true, false]
 pretrained_model_weights: !join [*IBASE, mlm/epoch_2/pytorch_model.bin]
 num_classes: 3
 output_hidden_states: false # [true, false]
@@ -38,6 +38,7 @@ pooler: "weighted" # [max, mean, mean_max, conv1d, attention, default, weighted]
 multi_drop: true # [true, false]
 
 ### train params
+text_lowercase: true # [true, false]
 epochs: 3
 n_accumulate: 1
 max_length: 512
@@ -55,7 +56,7 @@ b2: 0.999
 max_grad_norm: 1000
 
 ### scheduler
-scheduler: linear # ['linear', 'cosine', 'cosine_with_restarts', 'polynomial', 'constant', 'constant_with_warmup', CosineAnnealingLR, CosineAnnealingWarmRestarts, None]
+scheduler: cosine # ['linear', 'cosine', 'cosine_with_restarts', 'polynomial', 'constant', 'constant_with_warmup', CosineAnnealingLR, CosineAnnealingWarmRestarts, None]
 warmup_steps: 200
 cycles: 0.5
 T_max: 500
@@ -78,7 +79,7 @@ freq: 5
 valid_freq_per_epoch: 3
 
 ### kaggle save config
-title: exp-no-8
+title: exp-no-9
 
 ### mlm pretrain config
 # mlm_src: &MLM D:/Kevin/Machine Learning/FeedbackPEA/src/mlm/ # local
