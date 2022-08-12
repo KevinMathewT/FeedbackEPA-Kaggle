@@ -321,8 +321,48 @@ def surrounding_context(meta):
     return essay
 
 
-def calculate_topics():
-    pass
+def add_topics(df, train=True):
+    if train:
+        topic_pred_df = pd.read_csv(config['feedback_csv'])
+        topic_pred_df = topic_pred_df.drop(columns={'prob'})
+        topic_pred_df = topic_pred_df.rename(columns={'id': 'essay_id'})
+
+        topic_meta_df = pd.read_csv(config['feedmeta_csv'])
+        topic_meta_df = topic_meta_df.rename(columns={'Topic': 'topic', 'Name': 'topic_name'}).drop(columns=['Count'])
+        topic_meta_df.topic_name = topic_meta_df.topic_name.apply(lambda n: ' '.join(n.split('_')[1:]))
+
+        topic_pred_df = topic_pred_df.merge(topic_meta_df, on='topic', how='left')
+
+        df = df.merge(topic_pred_df, on='essay_id', how='left')
+    
+    else:
+        from bertopic import BERTopic
+        topic_model = BERTopic.load(config['feedback_model'])
+
+        sws = stopwords.words("english") + ["n't",  "'s", "'ve"]
+        fls = glob.glob(config['test_base'] + "*.txt")
+        docs = []
+        for fl in tqdm(fls):
+            with open(fl) as f:
+                txt = f.read()
+                word_tokens = word_tokenize(txt)
+                txt = " ".join([w for w in word_tokens if not w.lower() in sws])
+            docs.append(txt)
+
+        topics, probs = topic_model.transform(docs)
+        pred_topics = pd.DataFrame()
+        dids = list(map(lambda fl: fl.split("/")[-1].split(".")[0], fls))
+        pred_topics["id"] = dids
+        pred_topics["topic"] = topics
+        pred_topics['prob'] = probs
+        pred_topics = pred_topics.drop(columns={'prob'})
+        pred_topics = pred_topics.rename(columns={'id': 'essay_id'})
+        pred_topics = pred_topics.merge(topic_meta_df, on='topic', how='left')
+        pred_topics
+
+        df = df.merge(pred_topics, on='essay_id', how='left')
+
+    return df
 
 def get_discource_context(meta):
     essay_id = meta["essay_id"]
@@ -348,11 +388,15 @@ def get_discource_context(meta):
 
 if __name__ == "__main__":
     seed_everything(config["seed"])
-    calculate_topics()
 
     train = pd.read_csv(config["train_csv"])
     test = pd.read_csv(config["test_csv"])
     sample_submission = pd.read_csv(config["sample_csv"])
+
+    train = add_topics(train)
+    test = add_topics(test)
+
+    print(train)
 
     train["discourse_text"] = train["discourse_text"].apply(
         lambda x: resolve_encodings_and_normalize(x)
