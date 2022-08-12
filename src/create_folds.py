@@ -14,9 +14,9 @@ from pathlib import Path
 from text_unidecode import unidecode
 from collections import Counter, defaultdict
 
-# import nltk
-# from nltk.corpus import stopwords
-# from nltk.tokenize import word_tokenize
+import nltk
+from nltk.corpus import stopwords
+from nltk.tokenize import word_tokenize
 
 import pandas as pd
 import numpy as np
@@ -321,6 +321,9 @@ def surrounding_context(meta):
     return essay
 
 
+def calculate_topics():
+    pass
+
 def get_discource_context(meta):
     essay_id = meta["essay_id"]
     essay = resolve_encodings_and_normalize(
@@ -345,6 +348,7 @@ def get_discource_context(meta):
 
 if __name__ == "__main__":
     seed_everything(config["seed"])
+    calculate_topics()
 
     train = pd.read_csv(config["train_csv"])
     test = pd.read_csv(config["test_csv"])

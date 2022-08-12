@@ -1,4 +1,5 @@
 import gc
+import json
 import time
 import copy
 import wandb
@@ -51,6 +52,7 @@ class Validator:
             PATH = Path(config["weights_save"]) / f"Loss-Fold-{fold}.bin"
 
             accelerator.save(unwrapped_model.state_dict(), PATH)
+            json.dump({"loss": self.best_epoch_loss}, Path(config["weights_save"]) / "results.json")
             # Save a model file from the current directory
             print("\t" + f"Model Saved to: {PATH}{sr_}")
 

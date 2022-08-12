@@ -7,6 +7,9 @@ test_csv: !join [*IBASE, test.csv]
 sample_csv: !join [*IBASE, sample_submission.csv]
 train_base: !join [*IBASE, train/]
 test_base: !join [*IBASE, test/]
+feedback_model: !join [*IBASE, feedback-bertopic/feedback_2021_topic_model]
+feedback_csv: !join [*IBASE, feedback-bertopic/topic_model_feedback.csv]
+feedmeta_csv: !join [*IBASE, feedback-bertopic/topic_model_metadata.csv]
 
 # generated: &GBASE D:/Kevin/Machine Learning/FeedbackPEA/generated/ # local
 # generated: &GBASE /kaggle/working/generated/ # kaggle
