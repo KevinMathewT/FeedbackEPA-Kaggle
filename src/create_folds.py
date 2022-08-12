@@ -398,7 +398,7 @@ if __name__ == "__main__":
     sample_submission = pd.read_csv(config["sample_csv"])
 
     train = add_topics(train)
-    test = add_topics(test, train=True)
+    # test = add_topics(test, train=True)
 
     train["discourse_text"] = train["discourse_text"].apply(
         lambda x: resolve_encodings_and_normalize(x)
