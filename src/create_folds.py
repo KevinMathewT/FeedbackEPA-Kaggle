@@ -374,7 +374,7 @@ def get_discource_context(meta):
     discourse_type = meta["discourse_type"]
     discourse_text = meta["discourse_text"].strip()
     discourse_text = re.sub(r" \Z", "", discourse_text)
-    topic_name = meta['topic'].strip()
+    topic_name = meta['topic_name'].strip()
     text = (
         discourse_type
         + tokenizer.sep_token
