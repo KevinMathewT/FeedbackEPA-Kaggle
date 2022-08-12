@@ -399,8 +399,6 @@ if __name__ == "__main__":
     train = add_topics(train)
     test = add_topics(test)
 
-    print(train)
-
     train["discourse_text"] = train["discourse_text"].apply(
         lambda x: resolve_encodings_and_normalize(x)
     )
