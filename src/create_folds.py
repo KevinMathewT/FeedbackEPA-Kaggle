@@ -423,11 +423,11 @@ if __name__ == "__main__":
         get_discource_context,
         axis=1,
     )
-    context = "test"
-    test["text"] = test[["essay_id", "discourse_type", "discourse_text", "topic_name"]].apply(
-        get_discource_context,
-        axis=1,
-    )
+    # context = "test"
+    # test["text"] = test[["essay_id", "discourse_type", "discourse_text", "topic_name"]].apply(
+    #     get_discource_context,
+    #     axis=1,
+    # )
 
     # Surrounding Context
     # train["text"] = train[["essay_id", "discourse_type", "discourse_text"]].apply(
@@ -443,9 +443,9 @@ if __name__ == "__main__":
     train["discourse_type"] = train["discourse_type"].apply(
         lambda x: x if x != "Concluding Statement" else "Conclusion"
     )
-    test["discourse_type"] = test["discourse_type"].apply(
-        lambda x: x if x != "Concluding Statement" else "Conclusion"
-    )
+    # test["discourse_type"] = test["discourse_type"].apply(
+    #     lambda x: x if x != "Concluding Statement" else "Conclusion"
+    # )
 
     target_map = {"Adequate": 1, "Effective": 2, "Ineffective": 0}
 
