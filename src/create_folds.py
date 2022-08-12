@@ -421,12 +421,12 @@ if __name__ == "__main__":
     # test = pd.concat(essay_id_blocks, ignore_index=True)
 
     # Getting essay full text
-    train["text"] = train[["essay_id", "discourse_type", "discourse_text"]].apply(
+    train["text"] = train[["essay_id", "discourse_type", "discourse_text", "topic"]].apply(
         get_discource_context,
         axis=1,
     )
     context = "test"
-    test["text"] = test[["essay_id", "discourse_type", "discourse_text"]].apply(
+    test["text"] = test[["essay_id", "discourse_type", "discourse_text", "topic"]].apply(
         get_discource_context,
         axis=1,
     )
