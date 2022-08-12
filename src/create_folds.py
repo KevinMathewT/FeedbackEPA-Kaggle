@@ -366,6 +366,7 @@ def add_topics(df, train=True):
     return df
 
 def get_discource_context(meta):
+    print(meta)
     essay_id = meta["essay_id"]
     essay = resolve_encodings_and_normalize(
         open(Path(config[context + "_base"]) / (essay_id + ".txt"), "r").read()
