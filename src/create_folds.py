@@ -395,7 +395,7 @@ if __name__ == "__main__":
     seed_everything(config["seed"])
 
     train = pd.read_csv(config["train_csv"])
-    test = pd.read_csv(config["test_csv"])
+    test = pd.read_csv(config["test_csv"], train=True)
     sample_submission = pd.read_csv(config["sample_csv"])
 
     train = add_topics(train)
