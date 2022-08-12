@@ -8,6 +8,7 @@ import codecs
 import joblib
 import random
 import difflib
+from pprint import pprint
 from typing import Tuple
 from tqdm import tqdm
 from pathlib import Path
@@ -365,6 +366,7 @@ def add_topics(df, train=True):
     return df
 
 def get_discource_context(meta):
+    pprint(meta)
     essay_id = meta["essay_id"]
     essay = resolve_encodings_and_normalize(
         open(Path(config[context + "_base"]) / (essay_id + ".txt"), "r").read()
