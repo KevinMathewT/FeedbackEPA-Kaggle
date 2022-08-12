@@ -30,7 +30,7 @@ tokenizer_path: *MODEL
 ### kfold cv
 folds: 5
 fold_type: "stratified_group" # ["stratified", "group", "stratified_group"]
-tr_folds: [0]
+tr_folds: [0, 1, 2, 3, 4]
 
 ### model params
 use_pretrained: false # [true, false]
@@ -42,7 +42,7 @@ multi_drop: true # [true, false]
 
 ### train params
 text_lowercase: true # [true, false]
-epochs: 5
+epochs: 3
 n_accumulate: 1
 max_length: 512
 train_bs: 64
