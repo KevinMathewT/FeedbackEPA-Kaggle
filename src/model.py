@@ -19,11 +19,11 @@ class MultiDropout(nn.Module):
             self.fc = nn.Linear(model_config.hidden_size, config["num_classes"])
 
         # Multi Dropouts
-        self.dropout1 = nn.Dropout(0.1)
-        self.dropout2 = nn.Dropout(0.2)
-        self.dropout3 = nn.Dropout(0.3)
-        self.dropout4 = nn.Dropout(0.4)
-        self.dropout5 = nn.Dropout(0.5)
+        self.dropout1 = nn.Dropout(0.08)
+        self.dropout2 = nn.Dropout(0.09)
+        self.dropout3 = nn.Dropout(0.1)
+        self.dropout4 = nn.Dropout(0.11)
+        self.dropout5 = nn.Dropout(0.12)
 
     def forward(self, out):
         logits1 = self.fc(self.dropout1(out))
