@@ -65,6 +65,9 @@ def train_one_epoch(
             validator.validate(model=model, valid_loader=valid_loader, criterion=criterion, accelerator=accelerator, epoch=epoch, index=index, fold=fold)
             model.train()
 
+        if config['debug']:
+            break
+
     gc.collect()
 
     return epoch_loss
@@ -104,6 +107,9 @@ def valid_one_epoch(model, valid_loader, criterion, accelerator, epoch):
             accelerator.print(
                 "\t" + f"[{epoch}/{config['epochs']}][{str(step + 1):5s}/{len(valid_loader)}] valid loss: {epoch_loss:1.10f} | ce_loss: {epoch_ce_loss:1.10f} | time: {time() - st:1.1f}s"
             )
+            
+        if config['debug']:
+            break
 
     gc.collect()
 

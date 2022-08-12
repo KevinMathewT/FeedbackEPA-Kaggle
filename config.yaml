@@ -81,6 +81,9 @@ seed: 42
 freq: 5
 valid_freq_per_epoch: 3
 
+### debug
+debug: False
+
 ### kaggle save config
 title: exp-no-9
 
