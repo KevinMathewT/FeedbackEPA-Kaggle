@@ -394,7 +394,7 @@ if __name__ == "__main__":
     sample_submission = pd.read_csv(config["sample_csv"])
 
     train = add_topics(train)
-    test = add_topics(test)
+    test = add_topics(test, train=False)
 
     print(train)
 
