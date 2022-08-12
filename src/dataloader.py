@@ -24,7 +24,7 @@ class FeedBackDataset(Dataset):
     def __getitem__(self, index):
         text = self.text[index]
         if config['text_lowercase']:
-            text = text.lower().replace('[sep]', "[SEP]")
+            text = text.lower()
         inputs = self.tokenizer.encode_plus(
             text,
             add_special_tokens=True,
