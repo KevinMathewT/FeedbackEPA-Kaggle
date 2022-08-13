@@ -42,7 +42,7 @@ multi_drop: true # [true, false]
 
 ### train params
 text_lowercase: true # [true, false]
-epochs: 4
+epochs: 3
 n_accumulate: 1
 max_length: 512
 train_bs: 64
