@@ -22,7 +22,7 @@ label_enc: !join [*GBASE, label_enc.pkl]
 weights_save: &WBASE /home/working/weights/ # jarvis
 
 ### model names and paths
-model_name: &MODEL microsoft/deberta-v3-base
+model_name: &MODEL microsoft/deberta-v3-large
 # model_name: &MODEL microsoft/deberta-base
 # model_name: &MODEL distilbert-base-uncased
 tokenizer_path: *MODEL
@@ -78,14 +78,14 @@ amp: "fp16" # ["no", "fp16", "bf16"]
 seed: 42
 
 ### logging
-freq: 5
+freq: 50
 valid_freq_per_epoch: 3
 
 ### debug
 debug: False
 
 ### kaggle save config
-title: exp-no-12
+title: exp-no-13
 
 ### mlm pretrain config
 # mlm_src: &MLM D:/Kevin/Machine Learning/FeedbackPEA/src/mlm/ # local
