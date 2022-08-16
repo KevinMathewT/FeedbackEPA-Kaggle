@@ -51,8 +51,8 @@ valid_bs: 24
 
 ### optimizer
 optimizer: "adamw" # [adamw, lamb, radam]
-model_lr: 0.00015
-pooler_lr: 0.00015
+model_lr: 0.000015
+pooler_lr: 0.000015
 eps: 0.000001
 wd: 0.01
 b1: 0.9
