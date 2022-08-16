@@ -270,7 +270,6 @@ def get_optimizer_params(model):
             "weight_decay": 0.0,
         },
     ]
-    pprint(parameters)
 
     return parameters
 
