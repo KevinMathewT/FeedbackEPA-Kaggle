@@ -30,7 +30,7 @@ tokenizer_path: *MODEL
 ### kfold cv
 folds: 5
 fold_type: "stratified_group" # ["stratified", "group", "stratified_group"]
-tr_folds: [0]
+tr_folds: [1]
 
 ### model params
 use_pretrained: false # [true, false]
@@ -46,13 +46,13 @@ text_lowercase: true # [true, false]
 epochs: 3
 n_accumulate: 1
 max_length: 512
-train_bs: 24
-valid_bs: 24
+train_bs: 64
+valid_bs: 64
 
 ### optimizer
 optimizer: "adamw" # [adamw, lamb, radam]
-model_lr: 0.000015
-pooler_lr: 0.000015
+model_lr: 0.00004
+pooler_lr: 0.00004
 eps: 0.000001
 wd: 0.01
 b1: 0.9
