@@ -1,4 +1,5 @@
 import math
+from pprint import pprint
 
 import pandas as pd
 
@@ -269,6 +270,8 @@ def get_optimizer_params(model):
             "weight_decay": 0.0,
         },
     ]
+    pprint(parameters)
+
     return parameters
 
 
