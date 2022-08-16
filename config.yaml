@@ -46,8 +46,8 @@ text_lowercase: true # [true, false]
 epochs: 3
 n_accumulate: 1
 max_length: 512
-train_bs: 24
-valid_bs: 24
+train_bs: 16
+valid_bs: 16
 
 ### optimizer
 optimizer: "adamw" # [adamw, lamb, radam]
