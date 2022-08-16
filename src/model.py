@@ -270,7 +270,7 @@ class FeedBackModel(nn.Module):
             del orig_saved_weights
             del pretrained_weights
             _ = gc.collect()
-        self.model.gradient_checkpointing_enable()
+        # self.model.gradient_checkpointing_enable()
 
         self.pooler = models_dict[config["pooler"]](model_config=self.config)
         self.pooler.apply(self._init_weights)
