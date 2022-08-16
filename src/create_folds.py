@@ -324,24 +324,29 @@ def surrounding_context(meta):
 
 def add_topics(df, train=True):
     if train:
-        topic_pred_df = pd.read_csv(config['feedback_csv'])
-        topic_pred_df = topic_pred_df.drop(columns={'prob'})
-        topic_pred_df = topic_pred_df.rename(columns={'id': 'essay_id'})
+        topic_pred_df = pd.read_csv(config["feedback_csv"])
+        topic_pred_df = topic_pred_df.drop(columns={"prob"})
+        topic_pred_df = topic_pred_df.rename(columns={"id": "essay_id"})
 
-        topic_meta_df = pd.read_csv(config['feedmeta_csv'])
-        topic_meta_df = topic_meta_df.rename(columns={'Topic': 'topic', 'Name': 'topic_name'}).drop(columns=['Count'])
-        topic_meta_df.topic_name = topic_meta_df.topic_name.apply(lambda n: ' '.join(n.split('_')[1:]))
+        topic_meta_df = pd.read_csv(config["feedmeta_csv"])
+        topic_meta_df = topic_meta_df.rename(
+            columns={"Topic": "topic", "Name": "topic_name"}
+        ).drop(columns=["Count"])
+        topic_meta_df.topic_name = topic_meta_df.topic_name.apply(
+            lambda n: " ".join(n.split("_")[1:])
+        )
 
-        topic_pred_df = topic_pred_df.merge(topic_meta_df, on='topic', how='left')
+        topic_pred_df = topic_pred_df.merge(topic_meta_df, on="topic", how="left")
 
-        df = df.merge(topic_pred_df, on='essay_id', how='left')
-    
+        df = df.merge(topic_pred_df, on="essay_id", how="left")
+
     else:
         from bertopic import BERTopic
-        topic_model = BERTopic.load(config['feedback_model'])
 
-        sws = stopwords.words("english") + ["n't",  "'s", "'ve"]
-        fls = glob.glob(config['test_base'] + "*.txt")
+        topic_model = BERTopic.load(config["feedback_model"])
+
+        sws = stopwords.words("english") + ["n't", "'s", "'ve"]
+        fls = glob.glob(config["test_base"] + "*.txt")
         docs = []
         for fl in tqdm(fls):
             with open(fl) as f:
@@ -355,15 +360,16 @@ def add_topics(df, train=True):
         dids = list(map(lambda fl: fl.split("/")[-1].split(".")[0], fls))
         pred_topics["id"] = dids
         pred_topics["topic"] = topics
-        pred_topics['prob'] = probs
-        pred_topics = pred_topics.drop(columns={'prob'})
-        pred_topics = pred_topics.rename(columns={'id': 'essay_id'})
-        pred_topics = pred_topics.merge(topic_meta_df, on='topic', how='left')
+        pred_topics["prob"] = probs
+        pred_topics = pred_topics.drop(columns={"prob"})
+        pred_topics = pred_topics.rename(columns={"id": "essay_id"})
+        pred_topics = pred_topics.merge(topic_meta_df, on="topic", how="left")
         pred_topics
 
-        df = df.merge(pred_topics, on='essay_id', how='left')
+        df = df.merge(pred_topics, on="essay_id", how="left")
 
     return df
+
 
 def get_discource_context(meta):
     essay_id = meta["essay_id"]
@@ -373,11 +379,10 @@ def get_discource_context(meta):
     discourse_type = meta["discourse_type"]
     discourse_text = meta["discourse_text"].strip()
     discourse_text = re.sub(r" \Z", "", discourse_text)
-    topic_name = meta['topic_name'].strip()
+    topic_name = meta["topic_name"].strip() if config["add_topics"] else ""
     text = (
         discourse_type
-        # + tokenizer.sep_token
-        # + topic_name
+        + (tokenizer.sep_token + topic_name if config["add_topics"] else "")
         + tokenizer.sep_token
         + discourse_text
         + tokenizer.sep_token
@@ -397,7 +402,8 @@ if __name__ == "__main__":
     test = pd.read_csv(config["test_csv"])
     sample_submission = pd.read_csv(config["sample_csv"])
 
-    train = add_topics(train)
+    if config["add_topics"]:
+        train = add_topics(train)
     # test = add_topics(test, train=True)
 
     train["discourse_text"] = train["discourse_text"].apply(
@@ -419,7 +425,10 @@ if __name__ == "__main__":
     # test = pd.concat(essay_id_blocks, ignore_index=True)
 
     # Getting essay full text
-    train["text"] = train[["essay_id", "discourse_type", "discourse_text", "topic_name"]].apply(
+    meta_cols = ["essay_id", "discourse_type", "discourse_text"] + (
+        ["topic_name"] if config["add_topics"] else []
+    )
+    train["text"] = train[meta_cols].apply(
         get_discource_context,
         axis=1,
     )

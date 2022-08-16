@@ -41,6 +41,7 @@ pooler: "weighted" # [max, mean, mean_max, conv1d, attention, default, weighted]
 multi_drop: true # [true, false]
 
 ### train params
+add_topics: false # [true, false]
 text_lowercase: true # [true, false]
 epochs: 3
 n_accumulate: 1
