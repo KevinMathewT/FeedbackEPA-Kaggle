@@ -61,7 +61,7 @@ b2: 0.999
 max_grad_norm: 1000
 
 ### scheduler
-scheduler: cosine # ['linear', 'cosine', 'cosine_with_restarts', 'polynomial', 'constant', 'constant_with_warmup', CosineAnnealingLR, CosineAnnealingWarmRestarts, None]
+scheduler: linear # ['linear', 'cosine', 'cosine_with_restarts', 'polynomial', 'constant', 'constant_with_warmup', CosineAnnealingLR, CosineAnnealingWarmRestarts, None]
 warmup_steps: 200
 cycles: 0.5
 T_max: 500
