@@ -9,12 +9,12 @@ This pipeline gives good single model scores, but ensembling did not improve sco
 ## Leaderboard Scores:
 | Model                                                        | Weights                   | Public  | Private |
 | ------------------------------------------------------------ |:-------------------------:|:-------:| -------:|
-| DebertaV3Large + RobertaLarge + DebertaV3Base + RobertaBase  | 0.6, 0.196, 0.075, 0.128  | 0.61263 | 0.61258 |
-| DebertaV3Large + RobertaLarge + DebertaV3Base + RobertaBase  | 0.6, 0.32, 0.16, 0.19     | 0.61493 | 0.61507 |
-| DebertaV3Large + RobertaLarge + DebertaV3Base + RobertaBase  | 0.454, 0.248, 0.144, 0.15 | 0.61479 | 0.61474 |
-| DebertaV3Large + RobertaLarge + DebertaV3Base + RobertaBase  | 0.7, 0.0, 0.0, 0.3        | 0.61383 | 0.61393 |
-| DebertaV3Large + RobertaLarge + DebertaV3Base + RobertaBase  | 0.6, 0.2, 0.1, 0.1        | 0.61268 | 0.61254 |
-| DebertaV3Large + RobertaLarge + DebertaV3Base + RobertaBase  | 0.25, 0.25, 0.25, 0.25    | 0.62021 | 0.62012 |
+| DeBERTaV3Large + RoBERTaLarge + DeBERTaV3Base + RoBERTaBase  | 0.6, 0.196, 0.075, 0.128  | 0.61263 | 0.61258 |
+| DeBERTaV3Large + RoBERTaLarge + DeBERTaV3Base + RoBERTaBase  | 0.6, 0.32, 0.16, 0.19     | 0.61493 | 0.61507 |
+| DeBERTaV3Large + RoBERTaLarge + DeBERTaV3Base + RoBERTaBase  | 0.454, 0.248, 0.144, 0.15 | 0.61479 | 0.61474 |
+| DeBERTaV3Large + RoBERTaLarge + DeBERTaV3Base + RoBERTaBase  | 0.7, 0.0, 0.0, 0.3        | 0.61383 | 0.61393 |
+| DeBERTaV3Large + RoBERTaLarge + DeBERTaV3Base + RoBERTaBase  | 0.6, 0.2, 0.1, 0.1        | 0.61268 | 0.61254 |
+| DeBERTaV3Large + RoBERTaLarge + DeBERTaV3Base + RoBERTaBase  | 0.25, 0.25, 0.25, 0.25    | 0.62021 | 0.62012 |
 
 ## Ensembling
 Kaggle Notebook where I have tried different experiments for ensembling can be found [here](https://www.kaggle.com/code/kevinmathewt/feedbackpea-find-weights).
