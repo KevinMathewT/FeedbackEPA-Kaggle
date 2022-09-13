@@ -6,7 +6,7 @@ CV and LB scores for my single model experiments can be found [here](https://doc
 
 This pipeline gives good single model scores, but ensembling did not improve scores at all. Reasons for this, and other learnings from the competition are compiled towards the end of the readme.
 
-### Leaderboard Scores:
+## Leaderboard Scores:
 | Model                                                        | Weights                   | Public  | Private |
 | ------------------------------------------------------------ |:-------------------------:|:-------:| -------:|
 | DebertaV3Large + RobertaLarge + DebertaV3Base + RobertaBase  | 0.6, 0.196, 0.075, 0.128  | 0.61263 | 0.61258 |
@@ -16,12 +16,12 @@ This pipeline gives good single model scores, but ensembling did not improve sco
 | DebertaV3Large + RobertaLarge + DebertaV3Base + RobertaBase  | 0.6, 0.2, 0.1, 0.1        | 0.61268 | 0.61254 |
 | DebertaV3Large + RobertaLarge + DebertaV3Base + RobertaBase  | 0.25, 0.25, 0.25, 0.25    | 0.62021 | 0.62012 |
 
-### Ensembling
+## Ensembling
 Kaggle Notebook where I have tried different experiments for ensembling can be found [here](https://www.kaggle.com/code/kevinmathewt/feedbackpea-find-weights).
 
 I largely used SciPy's [optimize](https://docs.scipy.org/doc/scipy/reference/optimize.html), which gives you functions for minimizing objective functions. Now you can use this to find optimal weights for out-of-fold predictions from each model.
 
-### Training
+## Training
 Training configurations can be set in `config.yaml` (Pre-training using MLM configurations present towards the end)
 
 1. Before running training or pre-training, we need some basic setup - for this refer to `setup/linux_setup.sh`.
@@ -37,7 +37,7 @@ Training configurations can be set in `config.yaml` (Pre-training using MLM conf
    * Pipeline for MLM was largely adapted from the the [MLM no-trainer scipt](https://github.com/huggingface/transformers/blob/main/examples/pytorch/language-modeling/run_mlm_no_trainer.py) from the HuggingFace library, with certain modifications (check `src/mlm/mlm_no_trainer.py`)
 
 
-### Learnings
+## Learnings
 Considering I got the silver medal in my last NLP Kaggle competition, I did not do well in this competition (Top 39% finish). Here are my learnings:
 1. Focusing only on single models.
    * Hearing some of the top Kaggle performers talking about focusing on single models, and leaving ensembling to the last 1-2 weeks, I decided to attempt adopting the same philosophy.
