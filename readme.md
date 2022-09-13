@@ -22,7 +22,9 @@ Kaggle Notebook where I have tried different experiments for ensembling can be f
 I largely used SciPy's [optimize](https://docs.scipy.org/doc/scipy/reference/optimize.html), which gives you functions for minimizing objective functions. Now you can use this to find optimal weights for out-of-fold predictions from each model.
 
 ## Training
-Training configurations can be set in `config.yaml` (Pre-training using MLM configurations present towards the end)
+Training configurations can be set in `config.yaml` (Pre-training using MLM configurations present towards the end).
+
+This pipeline leverages HuggingFace's [accelerate](https://github.com/huggingface/accelerate) library, hence it supports GPU, Multi-GPU, TPU training etc.
 
 1. Before running training or pre-training, we need some basic setup - for this refer to `setup/linux_setup.sh`.
 
