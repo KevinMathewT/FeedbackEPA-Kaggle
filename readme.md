@@ -29,7 +29,7 @@ Training configurations can be set in `config.yaml` (Pre-training using MLM conf
 2. Once setup is complete training can be run using `setup/linux_run.sh`.
    * Model architecture can be set using the `model_name` field in `config.yaml`. This field accepts models available on HuggingFace.
      * Other configurations such as which pooler to use (this pipeline has several implementations; check `src/model.py`), multi-dropout etc. can also be configured in `config.yaml`.
-   * This will automatically create the folds, and also create a Kaggle Dataset save the trained weights to the Dataset (refer to `setup/save_weights.py` to see how this exactly works). 
+   * This will automatically create the folds, create a Kaggle Dataset, and save the trained weights to the Dataset (refer to `setup/save_weights.py` to see how this exactly works). 
    * Do add your Kaggle Username and Key to the script before runnning. 
    * Also for training from a pretrained model, add the Kaggle Dataset containing the pretrained model weights in the `setup/linux_run.sh` script, and also update the `use_pretrained` field in `config.yaml` to `true`.
 
