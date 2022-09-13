@@ -1,7 +1,7 @@
 ### paths
-# input: &IBASE D:/Kevin/Machine Learning/FeedbackPEA/input/ # local
+input: &IBASE D:/Kevin/Machine Learning/FeedbackPEA/input/ # local
 # input: &IBASE /kaggle/input/feedback-prize-effectiveness/ # kaggle
-input: &IBASE /home/working/input/ # jarvis
+# input: &IBASE /home/working/input/ # jarvis
 train_csv: !join [*IBASE, train.csv]
 test_csv: !join [*IBASE, test.csv]
 sample_csv: !join [*IBASE, sample_submission.csv]
@@ -11,15 +11,15 @@ feedback_model: !join [*IBASE, feedback-bertopic/feedback_2021_topic_model]
 feedback_csv: !join [*IBASE, feedback-bertopic/topic_model_feedback.csv]
 feedmeta_csv: !join [*IBASE, feedback-bertopic/topic_model_metadata.csv]
 
-# generated: &GBASE D:/Kevin/Machine Learning/FeedbackPEA/generated/ # local
+generated: &GBASE D:/Kevin/Machine Learning/FeedbackPEA/generated/ # local
 # generated: &GBASE /kaggle/working/generated/ # kaggle
-generated: &GBASE /home/working/generated/ # jarvis
+# generated: &GBASE /home/working/generated/ # jarvis
 train_folds: !join [*GBASE, train_folds.csv]
 label_enc: !join [*GBASE, label_enc.pkl]
 
-# weights_save: &WBASE D:/Kevin/Machine Learning/FeedbackPEA/weights/ # local
+weights_save: &WBASE D:/Kevin/Machine Learning/FeedbackPEA/weights/ # local
 # weights_save: &WBASE /kaggle/working/weights/ # kaggle
-weights_save: &WBASE /home/working/weights/ # jarvis
+# weights_save: &WBASE /home/working/weights/ # jarvis
 
 ### model names and paths
 model_name: &MODEL roberta-large

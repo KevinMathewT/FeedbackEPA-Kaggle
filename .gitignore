@@ -162,8 +162,6 @@ cython_debug/
 input/*
 generated/*
 weights/*
-setup/*.sh
-setup/kaggle.json
 wandb/
 .vscode/
 src/mlm/input/feedback-prize-2021/*
