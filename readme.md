@@ -32,7 +32,7 @@ This pipeline leverages HuggingFace's [accelerate](https://github.com/huggingfac
    * Model architecture can be set using the `model_name` field in `config.yaml`. This field accepts models available on HuggingFace.
      * Other configurations such as which pooler to use (this pipeline has several implementations; check `src/model.py`), multi-dropout etc. can also be configured in `config.yaml`.
    * This will automatically create the folds, create a Kaggle Dataset, and save the trained weights to the Dataset (refer to `setup/save_weights.py` to see how this exactly works). 
-   * Do add your Kaggle Username and Key to the script before runnning. 
+   * Do add your Kaggle Username and Key to the script before running. 
    * Also for training from a pretrained model, add the Kaggle Dataset containing the pretrained model weights in the `setup/linux_run.sh` script, and also update the `use_pretrained` field in `config.yaml` to `true`.
 
 3. For pre-training using Masked Language Modelling (MLM), run `setup/linux_mlm_run.sh`.
@@ -44,8 +44,8 @@ Considering I got the silver medal in my last NLP Kaggle competition, I did not 
 1. Focusing only on single models.
    * Hearing some of the top Kaggle performers talking about focusing on single models, and leaving ensembling to the last 1-2 weeks, I decided to attempt adopting the same philosophy.
    * Now I feel having some early experiments at ensembling gives you a better understanding of how much ensembling can contribute.
-     * And this contribution will be different for different ensembles (for e.g. in [this notebook](https://www.kaggle.com/code/mountpotatoq/autogluon-finetune-solutions), ensembling improved single models by almost 0.04!).
+     * And this contribution will be different for different ensembles (for e.g. in [this notebook](https://www.kaggle.com/code/mountpotatoq/autogluon-finetune-solutions), ensembling improved single models by almost 0.04! And I made the mistake of keeping the same expectation, until I actually performed the ensemble).
 2. Lack of variety of models in training (which is why single models were good, but ensembling did not improve much).
    * In my last competition, my objective was to improve publically available notebooks, and ensemble them.
      * This provides good variation, as different implementations might do small things differently, and this variety leads to good ensembling.
-   * In this competition, all models were trained using this repo, and there was very less variety (even the GPU was the same, I used A100 from [jarvislabs.com](jarvislabs.com)).
+   * In this competition, all models were trained using this repo, and there was very less variety (even the GPU was the same, I used A100 from [jarvislabs.com](https://www.jarvislabs.com)).
